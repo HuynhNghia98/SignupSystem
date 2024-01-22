@@ -1,0 +1,19 @@
+{
+  "Version": 1,
+  "Hash": "uPPIhN00cdh7xGYL0Yz6gIKDTVvX3odutjz2L9Ke35M=",
+  "Source": "SignupSystem",
+  "BasePath": "_content/SignupSystem",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "SignupSystem\\wwwroot",
+      "Source": "SignupSystem",
+      "ContentRoot": "D:\\JOBS\\ALTA (Back-End Intern)\\BT\\Course Signup System\\SignupSystem\\wwwroot\\",
+      "BasePath": "_content/SignupSystem",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": []
+}

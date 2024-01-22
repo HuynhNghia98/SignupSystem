@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34202.233
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignupSystem", "SignupSystem.csproj", "{1CA6F3E4-3C46-404D-8E38-FB2041EC6A53}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1CA6F3E4-3C46-404D-8E38-FB2041EC6A53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CA6F3E4-3C46-404D-8E38-FB2041EC6A53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CA6F3E4-3C46-404D-8E38-FB2041EC6A53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CA6F3E4-3C46-404D-8E38-FB2041EC6A53}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C193AF35-24FA-41A3-B415-5DD12B16B79A}
+	EndGlobalSection
+EndGlobal
