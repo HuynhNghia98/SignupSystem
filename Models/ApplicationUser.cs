@@ -15,23 +15,18 @@ namespace SignupSystem.Models
 		[Required]
 		public int Gender { get; set; }
 		[Required]
-		public string Email { get; set; } = string.Empty;
-		public string PhoneNumber { get; set; } = string.Empty;
-		public string TaxCode { get; set; } = string.Empty;
-		public bool IsStudent { get; set; } = false;
-		public bool IsLecturer { get; set; } = false;
-		public bool IsAdmin { get; set; } = false;
+		public string? Email { get; set; } = string.Empty;
+		public string? PhoneNumber { get; set; } = string.Empty;
+		public string? TaxCode { get; set; } = string.Empty;
+		public bool? IsStudent { get; set; } = false;
+		public bool? IsLecturer { get; set; } = false;
+		public bool? IsAdmin { get; set; } = false;
 		public string? ImageUrl { get; set; }
 		public string? Parents { get; set; }
 		public string? Address { get; set; }
 		[Required]
 		public DateTime DOB { get; set; }
-
-		[Required]
-		public int SubjectId { get; set; }
-		[ForeignKey("SubjectId")]
-		public Subject Subject { get; set; }
-
+		public string? SubjectTeaching { get; set; } = string.Empty;
 		public ICollection<RegisterClass>? RegisterClasses { get; set; }
 	}
 }

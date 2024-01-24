@@ -14,6 +14,6 @@ namespace SignupSystem.Models
 		public TimeSpan EndTime { get; set; }
 		public string ScheduleDetails { get; set; } = string.Empty;
 
-		public ICollection<RegisterClass>? RegisterClasses { get; set; }
+		public ICollection<RegisterSchedule>? RegisterSchedules { get; set; }
 	}
 }

@@ -7,5 +7,6 @@ namespace SignupSystem.Services.Auth.Interfaces
 	public interface IForgotPasswordService
 	{
 		Task<ApiResponse<object>> ForgotPassword(ForgotPasswordRequestDTO model);
+		Task<ApiResponse<object>> ChangePassword(ChangePasswordRequestDTO model);
 	}
 }

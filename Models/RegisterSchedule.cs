@@ -11,7 +11,7 @@ namespace SignupSystem.Models
 		public DateTime Createtime { get; set; }
 
 		[Required]
-		public string ScheduleId { get; set; }
+		public int ScheduleId { get; set; }
 		[ForeignKey("ScheduleId")]
 		public Schedule Schedule { get; set; }
 

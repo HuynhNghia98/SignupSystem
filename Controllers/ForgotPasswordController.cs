@@ -19,9 +19,23 @@ namespace SignupSystem.Controllers
 		}
 
 		[HttpPost("SendEmail")]
-		public async Task<IActionResult> ForgotPassword([FromForm] ForgotPasswordRequestDTO model)
+		public async Task<IActionResult> SendEmail([FromForm] ForgotPasswordRequestDTO model)
 		{
 			var result = await _forgotPasswordService.ForgotPassword(model);
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+		}
+
+		[HttpPost("ChangePassword")]
+		public async Task<IActionResult> ChangePassword([FromForm] ChangePasswordRequestDTO model)
+		{
+			var result = await _forgotPasswordService.ChangePassword(model);
 			if (result.IsSuccess)
 			{
 				return Ok(result);

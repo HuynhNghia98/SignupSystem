@@ -38,9 +38,9 @@ namespace SignupSystem.DataAccess.DbInitializer
 				_roleManager.CreateAsync(new IdentityRole(SD.Role_Student)).GetAwaiter().GetResult();
 
 				//Tạo tài khoản admin
-				_userManager.CreateAsync(new ApplicationUser
+				var newUser = new ApplicationUser
 				{
-					UserCode="Admin001",
+					UserCode = "Admin001",
 					UserName = "admin",
 					Email = "nghiaht0412@gmail.com",
 					FirstName = "Nghia",
@@ -48,11 +48,13 @@ namespace SignupSystem.DataAccess.DbInitializer
 					PhoneNumber = "0123456789",
 					Address = "HCM",
 					Gender = 0,
-					DOB = DateTime.Now,
+					IsAdmin = true,
+					DOB = DateTime.Now
+				};
 
-				}, "123").GetAwaiter().GetResult();
+				_userManager.CreateAsync(newUser, "123").GetAwaiter().GetResult();
 
-				ApplicationUser user = _db.ApplicationUsers.FirstOrDefault(x => x.Email == "nghiaht0412@gmail.com");
+				ApplicationUser user = _db.ApplicationUsers.FirstOrDefault(x => x.Email == newUser.Email);
 				_userManager.AddToRoleAsync(user, SD.Role_Admin).GetAwaiter().GetResult();
 			}
 

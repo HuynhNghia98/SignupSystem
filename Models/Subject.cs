@@ -20,7 +20,5 @@ namespace SignupSystem.Models
 		public int DepartmentId { get; set; }
 		[ForeignKey("DepartmentId")]
 		public Department Department { get; set; }
-
-		public ICollection<ApplicationUser>? ApplicationUsers { get; set; }
 	}
 }
