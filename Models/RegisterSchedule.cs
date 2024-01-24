@@ -3,17 +3,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SignupSystem.Models
 {
-	public class RegisterCourse
+	public class RegisterSchedule
 	{
 		[Key]
 		public int Id { get; set; }
 		[Required]
-		public DateTime RegisterTime { get; set; }
+		public DateTime Createtime { get; set; }
 
 		[Required]
-		public string ApplicationUserId { get; set; }
-		[ForeignKey("ApplicationUserId")]
-		public ApplicationUser ApplicationUser { get; set; }
+		public string ScheduleId { get; set; }
+		[ForeignKey("ScheduleId")]
+		public Schedule Schedule { get; set; }
 
 		[Required]
 		public int ClassId { get; set; }

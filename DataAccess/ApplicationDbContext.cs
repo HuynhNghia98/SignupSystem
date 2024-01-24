@@ -12,7 +12,7 @@ namespace SignupSystem.DataAccess.Data
 
 		public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 		public DbSet<Class> Classes { get; set; }
-		public DbSet<RegisterCourse> RegisterCourses { get; set; }
+		public DbSet<RegisterClass> RegisterCourses { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

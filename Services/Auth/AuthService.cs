@@ -47,7 +47,7 @@ namespace SignupSystem.Services.Auth
 			{
 				_res.IsSuccess = false;
 				_res.StatusCode = HttpStatusCode.NotFound;
-				ModelState.AddModelError(nameof(LoginRequestDTO.Username), "Email not exists.");
+				ModelState.AddModelError(nameof(LoginRequestDTO.Username), "Email không tồn tại.");
 				_res.Errors = ModelState.ToDictionary(
 							 kvp => kvp.Key,
 							 kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToList()
@@ -61,7 +61,7 @@ namespace SignupSystem.Services.Auth
 			{
 				_res.IsSuccess = false;
 				_res.StatusCode = HttpStatusCode.BadRequest;
-				ModelState.AddModelError(nameof(LoginRequestDTO.Password), "Wrong password.");
+				ModelState.AddModelError(nameof(LoginRequestDTO.Password), "Sai mật khẩu.");
 				_res.Errors = ModelState.ToDictionary(
 							 kvp => kvp.Key,
 							 kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToList()
@@ -81,7 +81,7 @@ namespace SignupSystem.Services.Auth
 			{
 				_res.IsSuccess = false;
 				_res.StatusCode = HttpStatusCode.BadRequest;
-				ModelState.AddModelError(nameof(LoginRequestDTO.Username), "Cannot login.");
+				ModelState.AddModelError(nameof(LoginRequestDTO.Username), "Không thể đăng nhập.");
 				_res.Errors = ModelState.ToDictionary(
 							 kvp => kvp.Key,
 							 kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToList()
