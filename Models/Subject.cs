@@ -20,5 +20,7 @@ namespace SignupSystem.Models
 		public int DepartmentId { get; set; }
 		[ForeignKey("DepartmentId")]
 		public Department Department { get; set; }
+
+		public ICollection<SubjectTeach>? SubjectTeaches { get; set; }
 	}
 }

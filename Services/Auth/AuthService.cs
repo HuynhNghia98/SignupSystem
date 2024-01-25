@@ -12,6 +12,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using SignupSystem.Services.Auth.Interfaces;
+using SignupSystem.Models.DTO.ForgotPassword;
+using SignupSystem.Utilities;
 
 namespace SignupSystem.Services.Auth
 {
@@ -38,7 +40,6 @@ namespace SignupSystem.Services.Auth
 			SecretKey = configuration.GetValue<string>("ApiSettings:SecretKey");
 		}
 
-		[HttpPost]
 		public async Task<ApiResponse<object>> Login(LoginRequestDTO loginRequestDTO)
 		{
 			ApplicationUser user = _db.Users.FirstOrDefault(x => x.UserName.ToLower() == loginRequestDTO.Username.ToLower());
@@ -47,11 +48,10 @@ namespace SignupSystem.Services.Auth
 			{
 				_res.IsSuccess = false;
 				_res.StatusCode = HttpStatusCode.NotFound;
-				ModelState.AddModelError(nameof(LoginRequestDTO.Username), "Email không tồn tại.");
-				_res.Errors = ModelState.ToDictionary(
-							 kvp => kvp.Key,
-							 kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToList()
-						 );
+
+				ModelStateHelper.AddModelError<LoginRequestDTO>(ModelState, nameof(LoginRequestDTO.Username), "Email không tồn tại.");
+				_res.Errors = ModelStateHelper.ConvertToDictionary(ModelState);
+
 				return _res;
 			}
 
@@ -61,11 +61,10 @@ namespace SignupSystem.Services.Auth
 			{
 				_res.IsSuccess = false;
 				_res.StatusCode = HttpStatusCode.BadRequest;
-				ModelState.AddModelError(nameof(LoginRequestDTO.Password), "Sai mật khẩu.");
-				_res.Errors = ModelState.ToDictionary(
-							 kvp => kvp.Key,
-							 kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToList()
-						 );
+
+				ModelStateHelper.AddModelError<LoginRequestDTO>(ModelState, nameof(LoginRequestDTO.Password), "Sai mật khẩu.");
+				_res.Errors = ModelStateHelper.ConvertToDictionary(ModelState);
+
 				_res.Result = new LoginRequestDTO();
 				return _res;
 			}
@@ -81,11 +80,10 @@ namespace SignupSystem.Services.Auth
 			{
 				_res.IsSuccess = false;
 				_res.StatusCode = HttpStatusCode.BadRequest;
-				ModelState.AddModelError(nameof(LoginRequestDTO.Username), "Không thể đăng nhập.");
-				_res.Errors = ModelState.ToDictionary(
-							 kvp => kvp.Key,
-							 kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToList()
-						 );
+
+				ModelStateHelper.AddModelError<LoginRequestDTO>(ModelState, nameof(LoginRequestDTO.Username), "Không thể đăng nhập.");
+				_res.Errors = ModelStateHelper.ConvertToDictionary(ModelState);
+
 				_res.Result = new LoginRequestDTO();
 				return _res;
 			}

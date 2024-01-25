@@ -13,6 +13,8 @@ using SignupSystem.Services.Auth;
 using SignupSystem.DataAccess.DbInitializer;
 using SignupSystem.Services.Auth.Interfaces;
 using SignupSystem.Utilities;
+using SignupSystem.Services.Student.Interfaces;
+using SignupSystem.Services.Student;
 
 namespace SignupSystem
 {
@@ -109,6 +111,7 @@ namespace SignupSystem
 			builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 			builder.Services.AddScoped<IMailService, MailService>();
 			builder.Services.AddScoped<IForgotPasswordService, ForgotPasswordService>();
+			builder.Services.AddScoped<IStudentService, StudentService>();
 
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();

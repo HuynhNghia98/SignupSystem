@@ -7,8 +7,6 @@ namespace SignupSystem.Models
 	public class ApplicationUser : IdentityUser
 	{
 		[Required]
-		public string UserCode { get; set; } = string.Empty;
-		[Required]
 		public string FirstName { get; set; } = string.Empty;
 		[Required]
 		public string LastName { get; set; } = string.Empty;
@@ -28,5 +26,6 @@ namespace SignupSystem.Models
 		public DateTime DOB { get; set; }
 		public string? SubjectTeaching { get; set; } = string.Empty;
 		public ICollection<RegisterClass>? RegisterClasses { get; set; }
+		public ICollection<SubjectTeach>? SubjectTeaches { get; set; }
 	}
 }

@@ -28,7 +28,6 @@ namespace SignupSystem.Services.Auth
 			_res = new();
 		}
 
-		[HttpPost]
 		public async Task<ApiResponse<object>> ForgotPassword(ForgotPasswordRequestDTO model)
 		{
 			if (ModelState.IsValid)
@@ -50,9 +49,10 @@ namespace SignupSystem.Services.Auth
 				string mailBody = $"<p {pStyle}>Please reset your password by clicking here: <button {btnStyle}>Click</button></p>" +
 					$"<p> <strong>UserId</strong>: {user.Id} </p>" +
 					$"<p> <strong>Token</strong>: {token} </p>";
+				string subject = "Reset Password";
 
 				// Gửi email chứa mã xác nhận
-				await _mailService.SendEmailAsync(user.LastName, user.LastName, user.Email, "Reset Password",mailBody);
+				await _mailService.SendEmailAsync(user.LastName, user.LastName, user.Email, subject, mailBody);
 
 				_res.Messages = "Email đặt lại mật khẩu đã được gửi";
 				return _res;
@@ -62,7 +62,6 @@ namespace SignupSystem.Services.Auth
 			return _res;
 		}
 
-		[HttpPost]
 		public async Task<ApiResponse<object>> ChangePassword(ChangePasswordRequestDTO model)
 		{
 			if (ModelState.IsValid)
