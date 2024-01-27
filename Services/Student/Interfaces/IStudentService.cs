@@ -1,4 +1,5 @@
-﻿using SignupSystem.Models.DTO.Auth;
+﻿using SignupSystem.Models;
+using SignupSystem.Models.DTO.Auth;
 using SignupSystem.Models.DTO.Student;
 using SignupSystem.Models.Response;
 
@@ -6,9 +7,9 @@ namespace SignupSystem.Services.Student.Interfaces
 {
 	public interface IStudentService
 	{
-		Task<ApiResponse<object>> GetStudentsAsync();
-		Task<ApiResponse<object>> GetStudentAsync();
-		Task<ApiResponse<object>> SearchStudentsAsync();
+		Task<ApiResponse<GetStudentsResponseDTO>> GetStudentsAsync();
+		Task<ApiResponse<ApplicationUser>> GetStudentAsync(string id);
+		Task<ApiResponse<GetStudentsResponseDTO>> SearchStudentsAsync(string search);
 		Task<ApiResponse<object>> UpdateStudentAsync();
 		Task<ApiResponse<object>> AddStudentAsync(AddStudentRequestDTO model);
 		Task<ApiResponse<object>> DeleteStudentAsync();

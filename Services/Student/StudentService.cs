@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SignupSystem.DataAccess.Data;
 using SignupSystem.DataAccess.Repository.IRepository;
 using SignupSystem.Models;
+using SignupSystem.Models.DTO.Auth;
 using SignupSystem.Models.DTO.ForgotPassword;
 using SignupSystem.Models.DTO.Student;
 using SignupSystem.Models.Response;
@@ -27,18 +28,71 @@ namespace SignupSystem.Services.Student
 			_res = new();
 		}
 
-		public Task<ApiResponse<object>> GetStudentsAsync()
+		public async Task<ApiResponse<GetStudentsResponseDTO>> GetStudentsAsync()
 		{
-			throw new NotImplementedException();
+			var students = await _unitOfWork.ApplicationUser.Get(x => x.IsStudent == true, true).ToListAsync();
+
+			ApiResponse<GetStudentsResponseDTO> res = new();
+
+			if (students == null)
+			{
+				res.IsSuccess = false;
+			}
+			else
+			{
+				res.Result.Students = students;
+			}
+			return res;
 		}
 
-		public Task<ApiResponse<object>> GetStudentAsync()
+		public async Task<ApiResponse<ApplicationUser>> GetStudentAsync(string id)
 		{
-			throw new NotImplementedException();
+			var student = await _unitOfWork.ApplicationUser.Get(x => x.Id == id, true).FirstOrDefaultAsync();
+
+			ApiResponse<ApplicationUser> res = new();
+
+			if (student == null)
+			{
+				res.Errors = new Dictionary<string, List<string>>
+				{
+					{ "Error", new List<string> { "Không thể tìm thấy người dùng." } }
+				};
+				res.Result = null;
+				res.IsSuccess = false;
+			}
+			else
+			{
+				res.Result = student;
+			}
+			return res;
 		}
-		public Task<ApiResponse<object>> SearchStudentsAsync()
+
+		public async Task<ApiResponse<GetStudentsResponseDTO>> SearchStudentsAsync(string search)
 		{
-			throw new NotImplementedException();
+			var student = await _unitOfWork.ApplicationUser
+				.Get(x => x.UserCode.Contains(search) ||
+				x.LastName.Contains(search) ||
+				x.FirstName.Contains(search) ||
+				x.Email.Contains(search) ||
+				x.PhoneNumber.Contains(search)
+				, true).ToListAsync();
+
+			ApiResponse<GetStudentsResponseDTO> res = new();
+
+			if (student == null || student.Count <= 0)
+			{
+				res.Errors = new Dictionary<string, List<string>>
+				{
+					{ "search", new List<string> { "Không thể tìm thấy người dùng." } }
+				};
+				res.Result = null;
+				res.IsSuccess = false;
+			}
+			else
+			{
+				res.Result.Students = student;
+			}
+			return res;
 		}
 
 		public async Task<ApiResponse<object>> AddStudentAsync(AddStudentRequestDTO model)
@@ -46,6 +100,7 @@ namespace SignupSystem.Services.Student
 			if (ModelState.IsValid)
 			{
 				var user = await _unitOfWork.ApplicationUser.Get(x => x.Email == model.Email, true).FirstOrDefaultAsync();
+
 
 				if (user != null)
 				{
@@ -56,10 +111,13 @@ namespace SignupSystem.Services.Student
 				}
 				else
 				{
+					var StudentCount = await _db.ApplicationUsers.CountAsync(x => x.IsStudent == true);
+
 					if (DateTime.TryParse(model.DOB, out DateTime dob))
 					{
 						var newStudent = new ApplicationUser()
 						{
+							UserCode = CreateUserCode.CreateCode(StudentCount),
 							IsStudent = true,
 							LastName = model.LastName,
 							FirstName = model.FirstName,
@@ -113,27 +171,27 @@ namespace SignupSystem.Services.Student
 			return _res;
 		}
 
-		public Task<ApiResponse<object>> UpdateStudentAsync()
+		public async Task<ApiResponse<object>> UpdateStudentAsync()
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task<ApiResponse<object>> DeleteStudentAsync()
+		public async Task<ApiResponse<object>> DeleteStudentAsync()
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task<ApiResponse<object>> GetStudentClassesAsync()
+		public async Task<ApiResponse<object>> GetStudentClassesAsync()
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task<ApiResponse<object>> GetStudentSchedulesAsync()
+		public async Task<ApiResponse<object>> GetStudentSchedulesAsync()
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task<ApiResponse<object>> PaySchoolFeeAsync()
+		public async Task<ApiResponse<object>> PaySchoolFeeAsync()
 		{
 			throw new NotImplementedException();
 		}

@@ -44,6 +44,7 @@ namespace SignupSystem.DataAccess.DbInitializer
 				//Tạo tài khoản admin
 				var newUser = new ApplicationUser
 				{
+					UserCode="Admin-001",
 					UserName = "admin",
 					Email = "nghiaht0412@gmail.com",
 					FirstName = "Nghia",

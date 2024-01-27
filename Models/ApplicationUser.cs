@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using SignupSystem.Utilities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,6 +7,8 @@ namespace SignupSystem.Models
 {
 	public class ApplicationUser : IdentityUser
 	{
+		[Required]
+		public string UserCode { get; set; } = string.Empty;
 		[Required]
 		public string FirstName { get; set; } = string.Empty;
 		[Required]

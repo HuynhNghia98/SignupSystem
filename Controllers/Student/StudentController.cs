@@ -11,11 +11,54 @@ namespace SignupSystem.Controllers.Student
 	public class StudentController : ControllerBase
 	{
 		private readonly IStudentService _studentService;
-		private ApiResponse<object> _res;
 		public StudentController(IStudentService studentService)
 		{
 			_studentService = studentService;
-			_res = new();
+		}
+
+		[HttpGet("GetStudents")]
+		public async Task<IActionResult> GetStudents()
+		{
+			var result = await _studentService.GetStudentsAsync();
+			if (result.IsSuccess)
+			{
+
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+		}
+
+		[HttpGet("GetStudent/{id}")]
+		public async Task<IActionResult> GetStudents(string id)
+		{
+			var result = await _studentService.GetStudentAsync(id);
+			if (result.IsSuccess)
+			{
+
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+		}
+
+		[HttpPost("SearchStudents")]
+		public async Task<IActionResult> SearchStudents([FromForm] string search)
+		{
+			var result = await _studentService.SearchStudentsAsync(search);
+			if (result.IsSuccess)
+			{
+
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
 		}
 
 		[HttpPost("AddStudent")]
