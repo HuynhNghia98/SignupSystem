@@ -48,11 +48,11 @@ namespace SignupSystem.Services.Student
 			return res;
 		}
 
-		public async Task<ApiResponse<ApplicationUser>> GetStudentAsync(string id)
+		public async Task<ApiResponse<GetStudentResponseDTO>> GetStudentAsync(string id)
 		{
 			var student = await _unitOfWork.ApplicationUser.Get(x => x.Id == id, true).FirstOrDefaultAsync();
 
-			ApiResponse<ApplicationUser> res = new();
+			ApiResponse<GetStudentResponseDTO> res = new();
 
 			if (student == null)
 			{
@@ -65,7 +65,14 @@ namespace SignupSystem.Services.Student
 			}
 			else
 			{
-				res.Result = student;
+				var registerClasses = await _unitOfWork.RegisterClass.Get(x => x.ApplicationUserId == student.Id, true).Include(x=>x.Class).ToListAsync();
+
+				if (registerClasses != null)
+				{
+					res.Result.RegisterClasses = registerClasses;
+				}
+
+				res.Result.Student = student;
 			}
 			return res;
 		}

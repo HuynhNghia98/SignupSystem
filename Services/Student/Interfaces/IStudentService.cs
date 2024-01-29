@@ -8,7 +8,7 @@ namespace SignupSystem.Services.Student.Interfaces
 	public interface IStudentService
 	{
 		Task<ApiResponse<GetStudentsResponseDTO>> GetStudentsAsync();
-		Task<ApiResponse<ApplicationUser>> GetStudentAsync(string id);
+		Task<ApiResponse<GetStudentResponseDTO>> GetStudentAsync(string id);
 		Task<ApiResponse<GetStudentsResponseDTO>> SearchStudentsAsync(string search);
 		Task<ApiResponse<object>> UpdateStudentAsync();
 		Task<ApiResponse<object>> AddStudentAsync(AddStudentRequestDTO model);

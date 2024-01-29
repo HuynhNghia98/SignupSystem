@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "uPPIhN00cdh7xGYL0Yz6gIKDTVvX3odutjz2L9Ke35M=",
+  "Hash": "gytol8pcCocParBdwArheJsCoHKkQh/RwPcBxq/FqqI=",
   "Source": "SignupSystem",
   "BasePath": "_content/SignupSystem",
   "Mode": "Default",
@@ -15,5 +15,23 @@
       "Pattern": "**"
     }
   ],
-  "Assets": []
+  "Assets": [
+    {
+      "Identity": "D:\\JOBS\\ALTA (Back-End Intern)\\BT\\Course Signup System\\SignupSystem\\wwwroot\\Images\\a8b1d5a7-9dbf-4f6f-93b7-28c8a6146846.png",
+      "SourceId": "SignupSystem",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\JOBS\\ALTA (Back-End Intern)\\BT\\Course Signup System\\SignupSystem\\wwwroot\\",
+      "BasePath": "_content/SignupSystem",
+      "RelativePath": "Images/a8b1d5a7-9dbf-4f6f-93b7-28c8a6146846.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Images\\a8b1d5a7-9dbf-4f6f-93b7-28c8a6146846.png"
+    }
+  ]
 }
