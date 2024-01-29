@@ -2,7 +2,7 @@
 
 namespace SignupSystem.Models.DTO.Student
 {
-	public class AddStudentRequestDTO
+	public class UpdateStudentRequestDTO
 	{
 		[Required(ErrorMessage = "Vui lòng nhập tên.")]
 		public string LastName { get; set; } = string.Empty;
@@ -18,10 +18,6 @@ namespace SignupSystem.Models.DTO.Student
 		public string? PhoneNumer { get; set; } = string.Empty;
 		public string? Address { get; set; } = string.Empty;
 		public string? Parents { get; set; } = string.Empty;
-		[Required(ErrorMessage = "Vui lòng nhập mật khẩu.")]
-		public string Password { get; set; } = string.Empty;
-		[Required(ErrorMessage = "Vui lòng nhập lớp.")]
-		public int ClassId { get; set; }
 		public IFormFile? File { get; set; }
 	}
 }

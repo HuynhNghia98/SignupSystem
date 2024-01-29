@@ -12,7 +12,7 @@ using SignupSystem.DataAccess.Data;
 namespace SignupSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240127044225_AddAllTables")]
+    [Migration("20240129065201_AddAllTables")]
     partial class AddAllTables
     {
         /// <inheritdoc />

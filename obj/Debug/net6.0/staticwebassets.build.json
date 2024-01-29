@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "gytol8pcCocParBdwArheJsCoHKkQh/RwPcBxq/FqqI=",
+  "Hash": "7cnfP6y5mbmNLvnU6l89Q15fh9+nIRmxQJBLp/p/zOA=",
   "Source": "SignupSystem",
   "BasePath": "_content/SignupSystem",
   "Mode": "Default",
@@ -17,6 +17,23 @@
   ],
   "Assets": [
     {
+      "Identity": "D:\\JOBS\\ALTA (Back-End Intern)\\BT\\Course Signup System\\SignupSystem\\wwwroot\\Images\\640a1c44-7c7f-4842-af4f-0e19eaaf2d67.png",
+      "SourceId": "SignupSystem",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\JOBS\\ALTA (Back-End Intern)\\BT\\Course Signup System\\SignupSystem\\wwwroot\\",
+      "BasePath": "_content/SignupSystem",
+      "RelativePath": "Images/640a1c44-7c7f-4842-af4f-0e19eaaf2d67.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Images\\640a1c44-7c7f-4842-af4f-0e19eaaf2d67.png"
+    },
+    {
       "Identity": "D:\\JOBS\\ALTA (Back-End Intern)\\BT\\Course Signup System\\SignupSystem\\wwwroot\\Images\\a8b1d5a7-9dbf-4f6f-93b7-28c8a6146846.png",
       "SourceId": "SignupSystem",
       "SourceType": "Discovered",
@@ -32,6 +49,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\Images\\a8b1d5a7-9dbf-4f6f-93b7-28c8a6146846.png"
+    },
+    {
+      "Identity": "D:\\JOBS\\ALTA (Back-End Intern)\\BT\\Course Signup System\\SignupSystem\\wwwroot\\Images\\baede9bd-dc78-46b7-951e-48d19de54a57.png",
+      "SourceId": "SignupSystem",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\JOBS\\ALTA (Back-End Intern)\\BT\\Course Signup System\\SignupSystem\\wwwroot\\",
+      "BasePath": "_content/SignupSystem",
+      "RelativePath": "Images/baede9bd-dc78-46b7-951e-48d19de54a57.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Images\\baede9bd-dc78-46b7-951e-48d19de54a57.png"
     }
   ]
 }

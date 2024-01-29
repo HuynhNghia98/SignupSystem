@@ -44,7 +44,7 @@ namespace SignupSystem.DataAccess.DbInitializer
 				//Tạo tài khoản admin
 				var newUser = new ApplicationUser
 				{
-					UserCode="Admin-001",
+					UserCode = "Admin-001",
 					UserName = "admin",
 					Email = "nghiaht0412@gmail.com",
 					FirstName = "Nghia",
@@ -62,15 +62,88 @@ namespace SignupSystem.DataAccess.DbInitializer
 				_userManager.AddToRoleAsync(user, SD.Role_Admin).GetAwaiter().GetResult();
 
 				//Tạo class
-				var newClass = new Class()
+				List<Class> newClassToAdd = new()
 				{
-					Name="Hoa",
-					Fee=1000000
+					new Class()
+					{
+						Name = "Hoa",
+					Fee = 1000000
+					},
+					new Class()
+					{
+						Name = "Hoa",
+					Fee = 1000000
+					},
 				};
-				_unitOfWork.Class.Add(newClass);
+				foreach (var item in newClassToAdd)
+				{
+					_unitOfWork.Class.Add(item);
+
+				}
+
+				//Tạo thời khóa biều
+				List<Schedule> newScheduleListToAdd = new()
+				{
+					new Schedule()
+					{
+						DayOfWeek = "Sáng Thứ 2",
+						StartTime = new TimeSpan(8, 0, 0),
+						EndTime = new TimeSpan(11, 30, 0),
+					},
+					new Schedule()
+					{
+						DayOfWeek = "Chiều Thứ 2",
+						StartTime = new TimeSpan(13, 0, 0),
+						EndTime = new TimeSpan(16, 30, 0),
+					},
+						new Schedule()
+					{
+						DayOfWeek = "Sáng Thứ 3",
+						StartTime = new TimeSpan(8, 0, 0),
+						EndTime = new TimeSpan(11, 30, 0),
+					},
+						new Schedule()
+					{
+						DayOfWeek = "Chiều Thứ 3",
+						StartTime = new TimeSpan(13, 0, 0),
+						EndTime = new TimeSpan(16, 30, 0),
+					},
+							new Schedule()
+					{
+						DayOfWeek = "Sáng Thứ 4",
+						StartTime = new TimeSpan(8, 0, 0),
+						EndTime = new TimeSpan(11, 30, 0),
+					},
+							new Schedule()
+					{
+						DayOfWeek = "Chiều Thứ 4",
+						StartTime = new TimeSpan(13, 0, 0),
+						EndTime = new TimeSpan(16, 30, 0),
+					},
+				};
+                foreach (var item in newScheduleListToAdd)
+                {
+					_unitOfWork.Schedule.Add(item);
+                }
+
+                _unitOfWork.Save();
+
+				//Đăng ký thời khóa biều cho lớp
+				var newRegisterScheduleForCLass1 = new RegisterSchedule()
+				{
+					ClassId= 1,
+					ScheduleId= 1,
+				};
+				_unitOfWork.RegisterSchedule.Add(newRegisterScheduleForCLass1);
+				var newRegisterScheduleForCLass2 = new RegisterSchedule()
+				{
+					ClassId = 2,
+					ScheduleId = 2,
+				};
+				_unitOfWork.RegisterSchedule.Add(newRegisterScheduleForCLass2);
+
 				_unitOfWork.Save();
 			}
-
 			return;
 		}
 	}

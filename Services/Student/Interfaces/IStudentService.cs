@@ -10,11 +10,14 @@ namespace SignupSystem.Services.Student.Interfaces
 		Task<ApiResponse<GetStudentsResponseDTO>> GetStudentsAsync();
 		Task<ApiResponse<GetStudentResponseDTO>> GetStudentAsync(string id);
 		Task<ApiResponse<GetStudentsResponseDTO>> SearchStudentsAsync(string search);
-		Task<ApiResponse<object>> UpdateStudentAsync();
+		Task<ApiResponse<object>> UpdateStudentAsync(string id, UpdateStudentRequestDTO model);
 		Task<ApiResponse<object>> AddStudentAsync(AddStudentRequestDTO model);
-		Task<ApiResponse<object>> DeleteStudentAsync();
-		Task<ApiResponse<object>> GetStudentClassesAsync();
+		Task<ApiResponse<object>> DeleteStudentAsync(string id);
+		Task<ApiResponse<GetStudentClassesResponseDTO>> GetStudentClassesAsync(string id);
+		Task<ApiResponse<object>> DeleteStudentRegisteredClassAsync(int id);
 		Task<ApiResponse<object>> PaySchoolFeeAsync();
 		Task<ApiResponse<object>> GetStudentSchedulesAsync();
+		Task<ApiResponse<GetClassesResponseDTO>> GetClassesAsync();
+		ApiResponse<object> RegisterClassForStudent(string userId,int classId);
 	}
 }

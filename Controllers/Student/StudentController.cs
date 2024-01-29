@@ -46,6 +46,20 @@ namespace SignupSystem.Controllers.Student
 			}
 		}
 
+		[HttpGet("GetClasses")]
+		public async Task<IActionResult> GetClasses()
+		{
+			var result = await _studentService.GetClassesAsync();
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+		}
+
 		[HttpPost("SearchStudents")]
 		public async Task<IActionResult> SearchStudents([FromForm] string search)
 		{
@@ -65,6 +79,76 @@ namespace SignupSystem.Controllers.Student
 		public async Task<IActionResult> AddStudent([FromForm] AddStudentRequestDTO model)
 		{
 			var result = await _studentService.AddStudentAsync(model);
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+		}
+
+		[HttpPut("UpdateStudent/{id}")]
+		public async Task<IActionResult> UpdateStudent(string id, [FromForm] UpdateStudentRequestDTO model)
+		{
+			var result = await _studentService.UpdateStudentAsync(id, model);
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+		}
+
+		[HttpDelete("DeleteStudent/{id}")]
+		public async Task<IActionResult> DeleteStudent(string id)
+		{
+			var result = await _studentService.DeleteStudentAsync(id);
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+		}
+
+		[HttpGet("GetStudentClasses/{id}")]
+		public async Task<IActionResult> GetStudentClasses(string id)
+		{
+			var result = await _studentService.GetStudentClassesAsync(id);
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+		}
+
+		[HttpDelete("DeleteRegisterdClasses/{id}")]
+		public async Task<IActionResult> DeleteRegisterdClasses(int id)
+		{
+			var result = await _studentService.DeleteStudentRegisteredClassAsync(id);
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+		}
+
+		[HttpPost("RegisterClass/{id}")]
+		public IActionResult RegisterClass(string id, [FromForm] int classId)
+		{
+			var result = _studentService.RegisterClassForStudent(id, classId);
 			if (result.IsSuccess)
 			{
 				return Ok(result);
