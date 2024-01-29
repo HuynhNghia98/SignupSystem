@@ -11,18 +11,21 @@ using SignupSystem.Models.DTO.Student;
 using SignupSystem.Models.Response;
 using SignupSystem.Services.Student.Interfaces;
 using SignupSystem.Utilities;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SignupSystem.Services.Student
 {
 	public class StudentService : ControllerBase, IStudentService
 	{
 		private readonly IUnitOfWork _unitOfWork;
+		private readonly IWebHostEnvironment _webHost;
 		private readonly ApplicationDbContext _db;
 		private readonly UserManager<ApplicationUser> _userManager;
 		private ApiResponse<object> _res;
-		public StudentService(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, ApplicationDbContext db)
+		public StudentService(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
 		{
 			_unitOfWork = unitOfWork;
+			_webHost = webHostEnvironment;
 			_userManager = userManager;
 			_db = db;
 			_res = new();
@@ -101,7 +104,6 @@ namespace SignupSystem.Services.Student
 			{
 				var user = await _unitOfWork.ApplicationUser.Get(x => x.Email == model.Email, true).FirstOrDefaultAsync();
 
-
 				if (user != null)
 				{
 					_res.IsSuccess = false;
@@ -153,21 +155,39 @@ namespace SignupSystem.Services.Student
 							_unitOfWork.RegisterClass.Add(registerClass);
 							_unitOfWork.Save();
 
-							_res.Messages = "Đã thêm học viên thành công";
-							return _res;
-						}
-						_res.IsSuccess = false;
-						return _res;
-					}
-					_res.IsSuccess = false;
+							//add image
+							if (model.File != null && model.File.Length > 0)
+							{
+								//root path
+								string wwwRootPath = _webHost.WebRootPath;
+								string userImagePath = Path.Combine(wwwRootPath, @"images");
+								string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
+								using (var fileStream = new FileStream(Path.Combine(userImagePath, fileName), FileMode.Create))
+								{
+									model.File.CopyTo(fileStream);
+								}
 
-					ModelStateHelper.AddModelError<AddStudentRequestDTO>(ModelState, nameof(AddStudentRequestDTO.DOB), "Ngày sinh không đúng.");
-					_res.Errors = ModelStateHelper.ConvertToDictionary(ModelState);
+								userInDb.ImageUrl = @"\images\" + fileName;
+								_unitOfWork.ApplicationUser.Update(userInDb);
+								_unitOfWork.Save();
+							}
+						}
+						_res.Messages = "Đã thêm học viên thành công";
+					}
+					else
+					{
+						_res.IsSuccess = false;
+
+						ModelStateHelper.AddModelError<AddStudentRequestDTO>(ModelState, nameof(AddStudentRequestDTO.DOB), "Ngày sinh không đúng.");
+						_res.Errors = ModelStateHelper.ConvertToDictionary(ModelState);
+					}
 				}
 
-				return _res;
 			}
-			_res.IsSuccess = false;
+			else
+			{
+				_res.IsSuccess = false;
+			}
 			return _res;
 		}
 

@@ -21,5 +21,6 @@ namespace SignupSystem.Models.DTO.Student
 		public string Password { get; set; } = string.Empty;
 		[Required]
 		public int ClassId { get; set; }
+		public IFormFile? File { get; set; }
 	}
 }
