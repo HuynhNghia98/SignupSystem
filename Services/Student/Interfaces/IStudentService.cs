@@ -15,7 +15,7 @@ namespace SignupSystem.Services.Student.Interfaces
 		Task<ApiResponse<object>> DeleteStudentAsync(string id);
 		Task<ApiResponse<GetStudentClassesResponseDTO>> GetStudentClassesAsync(string id);
 		Task<ApiResponse<object>> DeleteStudentRegisteredClassAsync(int id);
-		Task<ApiResponse<object>> PaySchoolFeeAsync();
+		Task<ApiResponse<object>> PaySchoolFeeAsync(int id, PayFeeRequestDTO model);
 		Task<ApiResponse<object>> GetStudentSchedulesAsync();
 		Task<ApiResponse<GetClassesResponseDTO>> GetClassesAsync();
 		ApiResponse<object> RegisterClassForStudent(string userId,int classId);

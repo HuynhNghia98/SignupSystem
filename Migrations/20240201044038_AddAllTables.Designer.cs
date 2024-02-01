@@ -12,7 +12,7 @@ using SignupSystem.DataAccess.Data;
 namespace SignupSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240129065201_AddAllTables")]
+    [Migration("20240201044038_AddAllTables")]
     partial class AddAllTables
     {
         /// <inheritdoc />
@@ -284,13 +284,26 @@ namespace SignupSystem.Migrations
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DayOfWeek")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Details")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("ClassId");
 
-                    b.ToTable("AssignClassTeaching");
+                    b.ToTable("AssignClassTeaches");
                 });
 
             modelBuilder.Entity("SignupSystem.Models.Class", b =>
@@ -376,7 +389,7 @@ namespace SignupSystem.Migrations
                     b.ToTable("FeeTypes");
                 });
 
-            modelBuilder.Entity("SignupSystem.Models.Payment", b =>
+            modelBuilder.Entity("SignupSystem.Models.RegisterClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -384,10 +397,17 @@ namespace SignupSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("ClassId")
                         .HasColumnType("int");
 
-                    b.Property<double>("Discount")
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double?>("Discount")
                         .HasColumnType("float");
 
                     b.Property<double>("Fee")
@@ -408,96 +428,13 @@ namespace SignupSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassId");
-
-                    b.HasIndex("FeeTypeId");
-
-                    b.ToTable("Payments");
-                });
-
-            modelBuilder.Entity("SignupSystem.Models.RegisterClass", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("ClassId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("PaymentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
                     b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("ClassId");
 
-                    b.HasIndex("PaymentId");
+                    b.HasIndex("FeeTypeId");
 
                     b.ToTable("RegisterCourses");
-                });
-
-            modelBuilder.Entity("SignupSystem.Models.RegisterSchedule", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ClassId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Createtime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ScheduleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassId");
-
-                    b.HasIndex("ScheduleId");
-
-                    b.ToTable("RegisterSchedules");
-                });
-
-            modelBuilder.Entity("SignupSystem.Models.Schedule", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("DayOfWeek")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("time");
-
-                    b.Property<string>("ScheduleDetails")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Schedules");
                 });
 
             modelBuilder.Entity("SignupSystem.Models.Subject", b =>
@@ -542,6 +479,9 @@ namespace SignupSystem.Migrations
                     b.Property<string>("ApplicationUserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SecondSubject")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SubjectId")
                         .HasColumnType("int");
@@ -615,7 +555,7 @@ namespace SignupSystem.Migrations
                         .IsRequired();
 
                     b.HasOne("SignupSystem.Models.Class", "Class")
-                        .WithMany("AssignClassTeachings")
+                        .WithMany("AssignClassTeaches")
                         .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -623,25 +563,6 @@ namespace SignupSystem.Migrations
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("Class");
-                });
-
-            modelBuilder.Entity("SignupSystem.Models.Payment", b =>
-                {
-                    b.HasOne("SignupSystem.Models.Class", "Class")
-                        .WithMany("Payments")
-                        .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SignupSystem.Models.FeeType", "FeeType")
-                        .WithMany("Payments")
-                        .HasForeignKey("FeeTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Class");
-
-                    b.Navigation("FeeType");
                 });
 
             modelBuilder.Entity("SignupSystem.Models.RegisterClass", b =>
@@ -658,32 +579,17 @@ namespace SignupSystem.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SignupSystem.Models.Payment", null)
+                    b.HasOne("SignupSystem.Models.FeeType", "FeeType")
                         .WithMany("RegisterClasses")
-                        .HasForeignKey("PaymentId");
+                        .HasForeignKey("FeeTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("Class");
-                });
 
-            modelBuilder.Entity("SignupSystem.Models.RegisterSchedule", b =>
-                {
-                    b.HasOne("SignupSystem.Models.Class", "Class")
-                        .WithMany("RegisterSchedules")
-                        .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SignupSystem.Models.Schedule", "Schedule")
-                        .WithMany("RegisterSchedules")
-                        .HasForeignKey("ScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Class");
-
-                    b.Navigation("Schedule");
+                    b.Navigation("FeeType");
                 });
 
             modelBuilder.Entity("SignupSystem.Models.Subject", b =>
@@ -733,13 +639,9 @@ namespace SignupSystem.Migrations
 
             modelBuilder.Entity("SignupSystem.Models.Class", b =>
                 {
-                    b.Navigation("AssignClassTeachings");
-
-                    b.Navigation("Payments");
+                    b.Navigation("AssignClassTeaches");
 
                     b.Navigation("RegisterClasses");
-
-                    b.Navigation("RegisterSchedules");
                 });
 
             modelBuilder.Entity("SignupSystem.Models.Department", b =>
@@ -754,17 +656,7 @@ namespace SignupSystem.Migrations
 
             modelBuilder.Entity("SignupSystem.Models.FeeType", b =>
                 {
-                    b.Navigation("Payments");
-                });
-
-            modelBuilder.Entity("SignupSystem.Models.Payment", b =>
-                {
                     b.Navigation("RegisterClasses");
-                });
-
-            modelBuilder.Entity("SignupSystem.Models.Schedule", b =>
-                {
-                    b.Navigation("RegisterSchedules");
                 });
 
             modelBuilder.Entity("SignupSystem.Models.Subject", b =>

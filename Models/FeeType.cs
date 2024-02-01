@@ -11,6 +11,6 @@ namespace SignupSystem.Models
 		public string FeeTypeName { get; set; } = string.Empty;
 		public string FeeTypeDetails { get; set; } = string.Empty;
 		[Required]
-		public ICollection<Payment>? Payments { get; set; }
+		public ICollection<RegisterClass>? RegisterClasses { get; set; }
 	}
 }

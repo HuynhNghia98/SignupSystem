@@ -7,8 +7,20 @@ namespace SignupSystem.Models
 	{
 		[Key]
 		public int Id { get; set; }
+
+		[Required]
+		public string DayOfWeek { get; set; } = string.Empty;
+
+		[Required]
+		public TimeSpan StartTime { get; set; }
+
+		[Required]
+		public TimeSpan EndTime { get; set; }
+
 		[Required]
 		public DateTime CreateTime { get; set; }
+
+		public string? Details { get; set; } = string.Empty;
 
 		[Required]
 		public string ApplicationUserId { get; set; }

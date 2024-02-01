@@ -66,82 +66,53 @@ namespace SignupSystem.DataAccess.DbInitializer
 				{
 					new Class()
 					{
-						Name = "Hoa",
-					Fee = 1000000
+						Name = "Họa - 001",
+						Fee = 1000000
 					},
 					new Class()
 					{
-						Name = "Hoa",
-					Fee = 1000000
+						Name = "Hát - 001",
+						Fee = 1000000
 					},
 				};
 				foreach (var item in newClassToAdd)
 				{
 					_unitOfWork.Class.Add(item);
-
 				}
 
-				//Tạo thời khóa biều
-				List<Schedule> newScheduleListToAdd = new()
+				//Tạo khoa
+				Faculty faculty = new()
 				{
-					new Schedule()
-					{
-						DayOfWeek = "Sáng Thứ 2",
-						StartTime = new TimeSpan(8, 0, 0),
-						EndTime = new TimeSpan(11, 30, 0),
-					},
-					new Schedule()
-					{
-						DayOfWeek = "Chiều Thứ 2",
-						StartTime = new TimeSpan(13, 0, 0),
-						EndTime = new TimeSpan(16, 30, 0),
-					},
-						new Schedule()
-					{
-						DayOfWeek = "Sáng Thứ 3",
-						StartTime = new TimeSpan(8, 0, 0),
-						EndTime = new TimeSpan(11, 30, 0),
-					},
-						new Schedule()
-					{
-						DayOfWeek = "Chiều Thứ 3",
-						StartTime = new TimeSpan(13, 0, 0),
-						EndTime = new TimeSpan(16, 30, 0),
-					},
-							new Schedule()
-					{
-						DayOfWeek = "Sáng Thứ 4",
-						StartTime = new TimeSpan(8, 0, 0),
-						EndTime = new TimeSpan(11, 30, 0),
-					},
-							new Schedule()
-					{
-						DayOfWeek = "Chiều Thứ 4",
-						StartTime = new TimeSpan(13, 0, 0),
-						EndTime = new TimeSpan(16, 30, 0),
-					},
+					Name = "Khoa Mỹ Thuật",
+					Details = "Dạy các môn về mỹ thuật"
 				};
-                foreach (var item in newScheduleListToAdd)
-                {
-					_unitOfWork.Schedule.Add(item);
-                }
-
-                _unitOfWork.Save();
-
-				//Đăng ký thời khóa biều cho lớp
-				var newRegisterScheduleForCLass1 = new RegisterSchedule()
+				_unitOfWork.Faculty.Add(faculty);
+				_unitOfWork.Save();
+				//Tạo bộ môn
+				Department department = new()
 				{
-					ClassId= 1,
-					ScheduleId= 1,
+					Name = "Bộ môn Mỹ Thuật",
+					Details = "Dạy các môn về mỹ thuật"
 				};
-				_unitOfWork.RegisterSchedule.Add(newRegisterScheduleForCLass1);
-				var newRegisterScheduleForCLass2 = new RegisterSchedule()
+				_unitOfWork.Department.Add(department);
+				_unitOfWork.Save();
+				// Tạo subject
+				Subject subject = new()
 				{
-					ClassId = 2,
-					ScheduleId = 2,
+					Name = "Mỹ Thuật - 001",
+					Details = "Dạy các môn về mỹ thuật",
+					FacultyId = faculty.Id,
+					DepartmentId = department.Id
 				};
-				_unitOfWork.RegisterSchedule.Add(newRegisterScheduleForCLass2);
+				_unitOfWork.Subject.Add(subject);
+				_unitOfWork.Save();
 
+				var newFeeType = new FeeType()
+				{
+					FeeTypeName = "Thu Toàn bộ khóa học (100%)",
+					FeeTypeDetails = "Thu Toàn bộ khóa học (100%)",
+				};
+				_unitOfWork.FeeType.Add(newFeeType);
 				_unitOfWork.Save();
 			}
 			return;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +34,7 @@ namespace SignupSystem.Services.Student
 
 		public async Task<ApiResponse<GetStudentsResponseDTO>> GetStudentsAsync()
 		{
-			var students = await _unitOfWork.ApplicationUser.Get(x => x.IsStudent == true, true).ToListAsync();
+			var students = await _unitOfWork.ApplicationUser.Get(x => x.IsStudent == true, true).Include(x => x.RegisterClasses).ToListAsync();
 
 			ApiResponse<GetStudentsResponseDTO> res = new();
 
@@ -134,7 +135,6 @@ namespace SignupSystem.Services.Student
 
 					if (DateTime.TryParse(model.DOB, out DateTime dob))
 					{
-						string username = model.Email.Split('@')[0];
 						var newStudent = new ApplicationUser()
 						{
 							UserCode = CreateUserCode.CreateCode(StudentCount),
@@ -144,7 +144,7 @@ namespace SignupSystem.Services.Student
 							DOB = dob,
 							Gender = model.Gender,
 							Email = model.Email,
-							UserName = username,
+							UserName = model.Email,
 							PhoneNumber = model.PhoneNumer,
 							Address = model.Address,
 							Parents = model.Parents,
@@ -163,13 +163,20 @@ namespace SignupSystem.Services.Student
 							}
 							//thêm role
 							_userManager.AddToRoleAsync(userInDb, SD.Role_Student).GetAwaiter().GetResult();
-							//đăng ký lớp
+
+							var classinfor = await _unitOfWork.Class.Get(x => x.Id == model.ClassId, true).FirstOrDefaultAsync();
+
+							//đăng ký lớp và trạng thái chưa thanh toán
 							var registerClass = new RegisterClass()
 							{
 								ApplicationUserId = userInDb.Id,
-								ClassId = model.ClassId
+								ClassId = model.ClassId,
+								Fee = classinfor.Fee,
+								Discount = 0,
+								PaymentStatus = SD.Payment_UnPaid,
+								PaymentDetails = "",
+								FeeTypeId = 1,
 							};
-
 							_unitOfWork.RegisterClass.Add(registerClass);
 							_unitOfWork.Save();
 
@@ -209,9 +216,6 @@ namespace SignupSystem.Services.Student
 			return _res;
 		}
 
-
-		/// new
-
 		public async Task<ApiResponse<object>> UpdateStudentAsync(string id, UpdateStudentRequestDTO model)
 		{
 			if (ModelState.IsValid)
@@ -245,6 +249,7 @@ namespace SignupSystem.Services.Student
 							user.DOB = dob;
 							user.Gender = model.Gender;
 							user.Email = model.Email;
+							user.UserName = model.Email;
 							user.PhoneNumber = model.PhoneNumer;
 							user.Address = model.Address;
 							user.Parents = model.Parents;
@@ -316,6 +321,21 @@ namespace SignupSystem.Services.Student
 				}
 				else
 				{
+					//root path
+					string wwwRootPath = _webHost.WebRootPath;
+					string userImagePath = Path.Combine(wwwRootPath, @"images");
+
+					//Xóa ảnh học viên
+					if (!string.IsNullOrEmpty(user.ImageUrl))
+					{
+						string imagePath = Path.Combine(wwwRootPath, user.ImageUrl.TrimStart('\\'));
+
+						if (System.IO.File.Exists(imagePath))
+						{
+							System.IO.File.Delete(imagePath);
+						}
+					}
+
 					_unitOfWork.ApplicationUser.Remove(user);
 					_unitOfWork.Save();
 
@@ -385,12 +405,29 @@ namespace SignupSystem.Services.Student
 		{
 			if (string.IsNullOrEmpty(userId) || classId == 0) { _res.IsSuccess = false; return _res; };
 
-			RegisterClass registerClass = new()
+			var classinfor = _unitOfWork.Class.Get(x => x.Id == classId, true).FirstOrDefault();
+
+			if (classinfor == null)
+			{
+				_res.IsSuccess = false;
+				_res.Errors = new Dictionary<string, List<string>>
+					{
+						{ "classId", new List<string> { "Không thể tìm thấy lớp." } }
+					};
+
+				return _res;
+			}
+			//đăng ký lớp và trạng thái chưa thanh toán
+			var registerClass = new RegisterClass()
 			{
 				ApplicationUserId = userId,
-				ClassId = classId
+				ClassId = classId,
+				Fee = classinfor.Fee,
+				Discount = 0,
+				PaymentStatus = SD.Payment_UnPaid,
+				PaymentDetails = "",
+				FeeTypeId = 1,
 			};
-
 			_unitOfWork.RegisterClass.Add(registerClass);
 			_unitOfWork.Save();
 
@@ -398,14 +435,54 @@ namespace SignupSystem.Services.Student
 			return _res;
 		}
 
+		/// new
+
 		public async Task<ApiResponse<object>> GetStudentSchedulesAsync()
 		{
 			throw new NotImplementedException();
 		}
 
-		public async Task<ApiResponse<object>> PaySchoolFeeAsync()
+		public async Task<ApiResponse<object>> PaySchoolFeeAsync(int id, PayFeeRequestDTO model)
 		{
-			throw new NotImplementedException();
+			if (id == 0)
+			{
+				_res.IsSuccess = false;
+				return _res;
+			}
+
+			if (ModelState.IsValid)
+			{
+				//Tìm đăng ký chưa đóng phí 
+				var registerdClass = await _unitOfWork.RegisterClass
+										.Get(x => x.Id == id && x.PaymentStatus == SD.Payment_UnPaid, true)
+										.FirstOrDefaultAsync();
+
+				if (registerdClass == null)
+				{
+					_res.IsSuccess = false;
+					ModelStateHelper.AddModelError<PayFeeRequestDTO>(ModelState, nameof(PayFeeRequestDTO.Fee), "Không tìm thấy lớp.");
+					_res.Errors = ModelStateHelper.ConvertToDictionary(ModelState);
+					return _res;
+				}
+
+				registerdClass.Fee = model.Fee;
+				registerdClass.Discount = model.Discount == null ? 0 : model.Discount;
+				registerdClass.PaymentDetails = model.Notes;
+				registerdClass.PaymentStatus = SD.Payment_Paid;
+				registerdClass.PaymentDate = DateTime.Now;
+				registerdClass.FeeTypeId = model.FeeTypeId;
+
+				_unitOfWork.RegisterClass.Update(registerdClass);
+				_unitOfWork.Save();
+
+				_res.Messages = "Đã thu học phí. ";
+			}
+			else
+			{
+				_res.IsSuccess = false;
+			}
+
+			return _res;
 		}
 	}
 }

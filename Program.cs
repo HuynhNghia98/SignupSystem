@@ -15,6 +15,8 @@ using SignupSystem.Services.Auth.Interfaces;
 using SignupSystem.Utilities;
 using SignupSystem.Services.Student.Interfaces;
 using SignupSystem.Services.Student;
+using SignupSystem.Services.Lecturer.Interfaces;
+using SignupSystem.Services.Lecturer;
 
 namespace SignupSystem
 {
@@ -112,6 +114,7 @@ namespace SignupSystem
 			builder.Services.AddScoped<IMailService, MailService>();
 			builder.Services.AddScoped<IForgotPasswordService, ForgotPasswordService>();
 			builder.Services.AddScoped<IStudentService, StudentService>();
+			builder.Services.AddScoped<ILecturerService, LecturerService>();
 
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();

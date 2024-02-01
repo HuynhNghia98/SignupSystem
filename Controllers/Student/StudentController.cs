@@ -158,5 +158,20 @@ namespace SignupSystem.Controllers.Student
 				return BadRequest(result);
 			}
 		}
+
+
+		[HttpPut("PaySchoolFee/{id}")]
+		public async Task<IActionResult> PaySchoolFee(int id, [FromForm] PayFeeRequestDTO model)
+		{
+			var result = await _studentService.PaySchoolFeeAsync(id, model);
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+		}
 	}
 }

@@ -13,10 +13,7 @@ namespace SignupSystem.DataAccess.Repository
 		public IDepartmentRepository Department { get; private set; }
 		public IFacultyRepository Faculty { get; private set; }
 		public IFeeTypeRepository FeeType { get; private set; }
-		public IPaymentRepository Payment { get; private set; }
 		public IRegisterClassRepository RegisterClass { get; private set; }
-		public IRegisterScheduleRepository RegisterSchedule { get; private set; }
-		public IScheduleRepository Schedule { get; private set; }
 		public ISubjectRepository Subject { get; private set; }
 		public ISubjectTeachRepository SubjectTeach { get; private set; }
 
@@ -29,10 +26,7 @@ namespace SignupSystem.DataAccess.Repository
 			Department = new DepartmentRepository(_db);
 			Faculty = new FacultyRepository(_db);
 			FeeType = new FeeTypeRepository(_db);
-			Payment = new PaymentRepository(_db);
 			RegisterClass = new RegisterClassRepository(_db);
-			RegisterSchedule = new RegisterScheduleRepository(_db);
-			Schedule = new ScheduleRepository(_db);
 			Subject = new SubjectRepository(_db);
 			SubjectTeach = new SubjectTeachRepository(_db);
 		}

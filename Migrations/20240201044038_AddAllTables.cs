@@ -82,22 +82,6 @@ namespace SignupSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Schedules",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DayOfWeek = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StartTime = table.Column<TimeSpan>(type: "time", nullable: false),
-                    EndTime = table.Column<TimeSpan>(type: "time", nullable: false),
-                    ScheduleDetails = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Schedules", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -164,37 +148,6 @@ namespace SignupSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Payments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PaymentStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Fee = table.Column<double>(type: "float", nullable: false),
-                    Discount = table.Column<double>(type: "float", nullable: false),
-                    PaymentDetails = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClassId = table.Column<int>(type: "int", nullable: false),
-                    FeeTypeId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Payments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Payments_Classes_ClassId",
-                        column: x => x.ClassId,
-                        principalTable: "Classes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Payments_FeeTypes_FeeTypeId",
-                        column: x => x.FeeTypeId,
-                        principalTable: "FeeTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "RoleClaims",
                 columns: table => new
                 {
@@ -216,53 +169,69 @@ namespace SignupSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RegisterSchedules",
+                name: "AssignClassTeaches",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Createtime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ScheduleId = table.Column<int>(type: "int", nullable: false),
-                    ClassId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RegisterSchedules", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_RegisterSchedules_Classes_ClassId",
-                        column: x => x.ClassId,
-                        principalTable: "Classes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RegisterSchedules_Schedules_ScheduleId",
-                        column: x => x.ScheduleId,
-                        principalTable: "Schedules",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AssignClassTeaching",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DayOfWeek = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StartTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    EndTime = table.Column<TimeSpan>(type: "time", nullable: false),
                     CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Details = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ClassId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AssignClassTeaching", x => x.Id);
+                    table.PrimaryKey("PK_AssignClassTeaches", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AssignClassTeaching_Classes_ClassId",
+                        name: "FK_AssignClassTeaches_Classes_ClassId",
                         column: x => x.ClassId,
                         principalTable: "Classes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AssignClassTeaching_Users_ApplicationUserId",
+                        name: "FK_AssignClassTeaches_Users_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RegisterCourses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PaymentStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Fee = table.Column<double>(type: "float", nullable: false),
+                    Discount = table.Column<double>(type: "float", nullable: true),
+                    PaymentDetails = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClassId = table.Column<int>(type: "int", nullable: false),
+                    FeeTypeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RegisterCourses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RegisterCourses_Classes_ClassId",
+                        column: x => x.ClassId,
+                        principalTable: "Classes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RegisterCourses_FeeTypes_FeeTypeId",
+                        column: x => x.FeeTypeId,
+                        principalTable: "FeeTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RegisterCourses_Users_ApplicationUserId",
                         column: x => x.ApplicationUserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -360,6 +329,7 @@ namespace SignupSystem.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    SecondSubject = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SubjectId = table.Column<int>(type: "int", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -380,58 +350,15 @@ namespace SignupSystem.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "RegisterCourses",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ClassId = table.Column<int>(type: "int", nullable: false),
-                    PaymentId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RegisterCourses", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_RegisterCourses_Classes_ClassId",
-                        column: x => x.ClassId,
-                        principalTable: "Classes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RegisterCourses_Payments_PaymentId",
-                        column: x => x.PaymentId,
-                        principalTable: "Payments",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_RegisterCourses_Users_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
-                name: "IX_AssignClassTeaching_ApplicationUserId",
-                table: "AssignClassTeaching",
+                name: "IX_AssignClassTeaches_ApplicationUserId",
+                table: "AssignClassTeaches",
                 column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AssignClassTeaching_ClassId",
-                table: "AssignClassTeaching",
+                name: "IX_AssignClassTeaches_ClassId",
+                table: "AssignClassTeaches",
                 column: "ClassId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Payments_ClassId",
-                table: "Payments",
-                column: "ClassId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Payments_FeeTypeId",
-                table: "Payments",
-                column: "FeeTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RegisterCourses_ApplicationUserId",
@@ -444,19 +371,9 @@ namespace SignupSystem.Migrations
                 column: "ClassId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RegisterCourses_PaymentId",
+                name: "IX_RegisterCourses_FeeTypeId",
                 table: "RegisterCourses",
-                column: "PaymentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RegisterSchedules_ClassId",
-                table: "RegisterSchedules",
-                column: "ClassId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RegisterSchedules_ScheduleId",
-                table: "RegisterSchedules",
-                column: "ScheduleId");
+                column: "FeeTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoleClaims_RoleId",
@@ -522,13 +439,10 @@ namespace SignupSystem.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AssignClassTeaching");
+                name: "AssignClassTeaches");
 
             migrationBuilder.DropTable(
                 name: "RegisterCourses");
-
-            migrationBuilder.DropTable(
-                name: "RegisterSchedules");
 
             migrationBuilder.DropTable(
                 name: "RoleClaims");
@@ -549,10 +463,10 @@ namespace SignupSystem.Migrations
                 name: "UserTokens");
 
             migrationBuilder.DropTable(
-                name: "Payments");
+                name: "Classes");
 
             migrationBuilder.DropTable(
-                name: "Schedules");
+                name: "FeeTypes");
 
             migrationBuilder.DropTable(
                 name: "Subjects");
@@ -562,12 +476,6 @@ namespace SignupSystem.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Classes");
-
-            migrationBuilder.DropTable(
-                name: "FeeTypes");
 
             migrationBuilder.DropTable(
                 name: "Departments");

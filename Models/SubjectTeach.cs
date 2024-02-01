@@ -7,6 +7,7 @@ namespace SignupSystem.Models
 	{
 		[Key]
 		public int Id { get; set; }
+		public string? SecondSubject { get; set; } = string.Empty;
 
 		[Required]
 		public int SubjectId { get; set; }
