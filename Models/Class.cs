@@ -13,6 +13,8 @@ namespace SignupSystem.Models
 		[Required]
 		public string SchoolYear { get; set; } = string.Empty;
 		[Required]
+		public string Status { get; set; } = string.Empty;
+		[Required]
 		public double Fee { get; set; }
 
 		public ICollection<RegisterClass>? RegisterClasses { get; set; }

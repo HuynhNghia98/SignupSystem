@@ -337,6 +337,10 @@ namespace SignupSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Classes");
@@ -469,7 +473,6 @@ namespace SignupSystem.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Details")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("FacultyId")

@@ -20,6 +20,7 @@ namespace SignupSystem.Migrations
                     ClassCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SchoolYear = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Fee = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
@@ -130,7 +131,7 @@ namespace SignupSystem.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SubjectCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Details = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Details = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FacultyId = table.Column<int>(type: "int", nullable: false),
                     DepartmentId = table.Column<int>(type: "int", nullable: false)
                 },

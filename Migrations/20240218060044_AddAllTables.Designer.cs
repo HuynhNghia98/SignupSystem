@@ -12,7 +12,7 @@ using SignupSystem.DataAccess.Data;
 namespace SignupSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240218054434_AddAllTables")]
+    [Migration("20240218060044_AddAllTables")]
     partial class AddAllTables
     {
         /// <inheritdoc />
@@ -340,6 +340,10 @@ namespace SignupSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Classes");
@@ -472,7 +476,6 @@ namespace SignupSystem.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Details")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("FacultyId")
