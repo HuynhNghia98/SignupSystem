@@ -46,7 +46,7 @@ namespace SignupSystem.Controllers.Department
 
 		}
 
-		[HttpGet("SearchDepartment")]
+		[HttpPost("SearchDepartment")]
 		public async Task<IActionResult> SearchDepartment([FromForm] string search)
 		{
 			var result = await _department.SearchDepartmentsAsync(search);

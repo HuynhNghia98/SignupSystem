@@ -24,6 +24,10 @@ using SignupSystem.Services.TrainningCourse.Interfaces;
 using SignupSystem.Services.TrainningCourse;
 using SignupSystem.Services.Subject.Interfaces;
 using SignupSystem.Services.Subject;
+using SignupSystem.Services.Department.Interfaces;
+using SignupSystem.Services.Department;
+using SignupSystem.Services.Faculty.Interfaces;
+using SignupSystem.Services.Faculty;
 
 namespace SignupSystem
 {
@@ -130,6 +134,8 @@ namespace SignupSystem
 			builder.Services.AddScoped<IClassService, ClassService>();
 			builder.Services.AddScoped<ISubjectService, SubjectService>();
 			builder.Services.AddScoped<ITrainingCourseService, TrainingCourseService>();
+			builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+			builder.Services.AddScoped<IFacultyService, FacultyService>();
 
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();

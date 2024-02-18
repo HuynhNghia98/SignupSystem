@@ -78,8 +78,7 @@ namespace SignupSystem.DataAccess.DbInitializer
 						ClassCode="L01",
 						Name = "Họa - 001",
 						Fee = 1000000,
-						Status = "Mở",
-						SchoolYear = "2024-2024",
+						Status = true,
 						TrainingCourseId=1,
 					},
 					new Class()
@@ -87,8 +86,7 @@ namespace SignupSystem.DataAccess.DbInitializer
 						ClassCode="L02",
 						Name = "Hát - 001",
 						Fee = 1000000,
-						Status = "Mở",
-						SchoolYear = "2024-2024",
+						Status = true,
 						TrainingCourseId=1,
 					},
 				};
