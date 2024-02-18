@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SignupSystem.DataAccess.Repository.IRepository;
-using SignupSystem.Models;
-using SignupSystem.Models.DTO.Class;
 using SignupSystem.Models.DTO.Subject;
+using SignupSystem.Models.DTO.TrainingCourse;
 using SignupSystem.Models.Response;
-using SignupSystem.Services.Class.Interfaces;
 using SignupSystem.Services.Subject.Interfaces;
 
 namespace SignupSystem.Services.Subject
@@ -21,7 +19,7 @@ namespace SignupSystem.Services.Subject
 		}
 		public async Task<ApiResponse<GetSubjectsResponseDTO>> GetSubjectsAsync()
 		{
-			var subjects = await _unitOfWork.Subject.GetAll().ToListAsync();
+			var subjects = await _unitOfWork.Subject.GetAll().Include(x=>x.Faculty).Include(x => x.Department).ToListAsync();
 
 			ApiResponse<GetSubjectsResponseDTO> res = new();
 			res.Result.Subjects = subjects;
@@ -43,6 +41,18 @@ namespace SignupSystem.Services.Subject
 			{
 				res.Result = subjectInDb;
 			}
+			return res;
+		}
+
+		public async Task<ApiResponse<GetSubjectsResponseDTO>> SearchSubjectsAsync(string search)
+		{
+			var subjectsInDb = await _unitOfWork.Subject.Get(x => x.SubjectCode.Contains(search) ||
+																				x.Name.Contains(search)
+																				, true).ToListAsync();
+
+			ApiResponse<GetSubjectsResponseDTO> res = new();
+			res.Result.Subjects = subjectsInDb;
+
 			return res;
 		}
 

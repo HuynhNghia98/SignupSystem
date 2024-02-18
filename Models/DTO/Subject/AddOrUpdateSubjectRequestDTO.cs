@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SignupSystem.Models.DTO.Class
+namespace SignupSystem.Models.DTO.Subject
 {
 	public class AddOrUpdateSubjectRequestDTO
 	{

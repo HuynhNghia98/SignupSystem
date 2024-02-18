@@ -61,18 +61,35 @@ namespace SignupSystem.DataAccess.DbInitializer
 				ApplicationUser user = _db.ApplicationUsers.FirstOrDefault(x => x.Email == newUser.Email);
 				_userManager.AddToRoleAsync(user, SD.Role_Admin).GetAwaiter().GetResult();
 
+				//Tạo Khóa đào tạo
+				TrainingCourse trainingCourse = new()
+				{
+					TrainingCourseCode = "DT01",
+					Name = "khoa dao tao 1",
+				};
+				_unitOfWork.TrainingCourse.Add(trainingCourse);
+				_unitOfWork.Save();
+
 				//Tạo class
 				List<Class> newClassToAdd = new()
 				{
 					new Class()
 					{
+						ClassCode="L01",
 						Name = "Họa - 001",
-						Fee = 1000000
+						Fee = 1000000,
+						Status = "Mở",
+						SchoolYear = "2024-2024",
+						TrainingCourseId=1,
 					},
 					new Class()
 					{
+						ClassCode="L02",
 						Name = "Hát - 001",
-						Fee = 1000000
+						Fee = 1000000,
+						Status = "Mở",
+						SchoolYear = "2024-2024",
+						TrainingCourseId=1,
 					},
 				};
 				foreach (var item in newClassToAdd)

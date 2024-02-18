@@ -18,9 +18,12 @@ using SignupSystem.Services.Student;
 using SignupSystem.Services.Lecturer.Interfaces;
 using SignupSystem.Services.Lecturer;
 using Microsoft.OpenApi.Any;
-using Microsoft.Extensions.Options;
 using SignupSystem.Services.Class.Interfaces;
 using SignupSystem.Services.Class;
+using SignupSystem.Services.TrainningCourse.Interfaces;
+using SignupSystem.Services.TrainningCourse;
+using SignupSystem.Services.Subject.Interfaces;
+using SignupSystem.Services.Subject;
 
 namespace SignupSystem
 {
@@ -125,6 +128,8 @@ namespace SignupSystem
 			builder.Services.AddScoped<IStudentService, StudentService>();
 			builder.Services.AddScoped<ILecturerService, LecturerService>();
 			builder.Services.AddScoped<IClassService, ClassService>();
+			builder.Services.AddScoped<ISubjectService, SubjectService>();
+			builder.Services.AddScoped<ITrainingCourseService, TrainingCourseService>();
 
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SignupSystem.Models.DTO.Class;
+using SignupSystem.Models.DTO.Subject;
 using SignupSystem.Services.Class.Interfaces;
 using SignupSystem.Services.Subject.Interfaces;
 
@@ -36,6 +37,22 @@ namespace SignupSystem.Controllers.Subject
 		public async Task<IActionResult> GetSubject(int id)
 		{
 			var result = await _subjectService.GetSubjectAsync(id);
+
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest();
+			}
+
+		}
+
+		[HttpGet("SearchSubject")]
+		public async Task<IActionResult> SearchSubject([FromForm]string search)
+		{
+			var result = await _subjectService.SearchSubjectsAsync(search);
 
 			if (result.IsSuccess)
 			{

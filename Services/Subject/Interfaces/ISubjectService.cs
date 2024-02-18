@@ -8,6 +8,7 @@ namespace SignupSystem.Services.Subject.Interfaces
 	{
 		Task<ApiResponse<GetSubjectsResponseDTO>> GetSubjectsAsync();
 		Task<ApiResponse<Models.Subject>> GetSubjectAsync(int subjectId);
+		Task<ApiResponse<GetSubjectsResponseDTO>> SearchSubjectsAsync(string search);
 		ApiResponse<object> AddSubjectAsync(AddOrUpdateSubjectRequestDTO model);
 		Task<ApiResponse<object>> UpdateSubjectAsync(int subjectId, AddOrUpdateSubjectRequestDTO model);
 		Task<ApiResponse<object>> DeleteSubjectAsync(int subjectId);
