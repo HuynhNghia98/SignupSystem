@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using SignupSystem.Models.DTO.Class;
+﻿using Microsoft.AspNetCore.Mvc;
 using SignupSystem.Models.DTO.Subject;
-using SignupSystem.Services.Class.Interfaces;
 using SignupSystem.Services.Subject.Interfaces;
 
 namespace SignupSystem.Controllers.Subject

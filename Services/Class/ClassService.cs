@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using SignupSystem.Models.DTO.Subject;
 using SignupSystem.Models.DTO.Student;
 using SignupSystem.Utilities;
-using SignupSystem.Models;
 
 namespace SignupSystem.Services.Class
 {
@@ -238,6 +237,7 @@ namespace SignupSystem.Services.Class
 
 		public ApiResponse<object> AddScoreForClassAsync(int classId, string studentId)
 		{
+
 			throw new NotImplementedException();
 		}
 

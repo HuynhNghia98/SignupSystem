@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using SignupSystem.DataAccess.Repository.IRepository;
 using SignupSystem.Models.DTO.Subject;
-using SignupSystem.Models.DTO.TrainingCourse;
 using SignupSystem.Models.Response;
 using SignupSystem.Services.Subject.Interfaces;
 
