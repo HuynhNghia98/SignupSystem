@@ -48,7 +48,8 @@ namespace SignupSystem.Services.Subject
 		{
 			var subjectsInDb = await _unitOfWork.Subject.Get(x => x.SubjectCode.Contains(search) ||
 																				x.Name.Contains(search)
-																				, true).ToListAsync();
+																				, true)
+																			.Include(x=>x.Faculty).Include(x => x.Department).ToListAsync();
 
 			ApiResponse<GetSubjectsResponseDTO> res = new();
 			res.Result.Subjects = subjectsInDb;

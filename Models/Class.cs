@@ -12,11 +12,18 @@ namespace SignupSystem.Models
 		[Required]
 		public string Name { get; set; } = string.Empty;
 		[Required]
-		public string SchoolYear { get; set; } = string.Empty;
-		[Required]
-		public string Status { get; set; } = string.Empty;
-		[Required]
 		public double Fee { get; set; }
+		[Required]
+		public int StudentQuantity { get; set; }
+		[Required]
+		public bool Status { get; set; }
+		public string? ImageUrl { get; set; }
+		public string? Detail { get; set; } = string.Empty;
+
+		[Required]
+		public int FacultyId { get; set; }
+		[ForeignKey("FacultyId")]
+		public Faculty Faculty { get; set; }
 
 		[Required]
 		public int TrainingCourseId { get; set; }

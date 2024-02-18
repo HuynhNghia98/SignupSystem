@@ -47,6 +47,31 @@ namespace SignupSystem.Controllers.Class
 
 		}
 
+		[HttpPost("SearchClass")]
+		public async Task<IActionResult> SearchClass([FromForm] string? searchById, [FromForm] string? searchByName)
+		{
+			if (searchById == null)
+			{
+				searchById = "";
+			}
+			if (searchByName == null)
+			{
+				searchByName = "";
+			}
+
+			var result = await _classService.SearchClassesAsync(searchById, searchByName);
+
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest();
+			}
+
+		}
+
 		[HttpPost("AddClass")]
 		public IActionResult AddClass([FromForm] AddOrUpdateClassRequestDTO model)
 		{
