@@ -1,11 +1,12 @@
 ﻿using SignupSystem.Models;
 using SignupSystem.Models.DTO.Auth;
+using SignupSystem.Models.DTO.Class;
 using SignupSystem.Models.DTO.Student;
 using SignupSystem.Models.Response;
 
 namespace SignupSystem.Services.Student.Interfaces
 {
-	public interface IStudentService
+    public interface IStudentService
 	{
 		Task<ApiResponse<GetStudentsResponseDTO>> GetStudentsAsync();
 		Task<ApiResponse<GetStudentResponseDTO>> GetStudentAsync(string id);
@@ -17,7 +18,6 @@ namespace SignupSystem.Services.Student.Interfaces
 		Task<ApiResponse<object>> DeleteStudentRegisteredClassAsync(int id);
 		Task<ApiResponse<object>> PaySchoolFeeAsync(int id, PayFeeRequestDTO model);
 		Task<ApiResponse<object>> GetStudentSchedulesAsync();
-		Task<ApiResponse<GetClassesResponseDTO>> GetClassesAsync();
 		ApiResponse<object> RegisterClassForStudent(string userId,int classId);
 	}
 }

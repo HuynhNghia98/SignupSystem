@@ -5,15 +5,17 @@ using Microsoft.EntityFrameworkCore;
 using SignupSystem.DataAccess.Data;
 using SignupSystem.DataAccess.Repository.IRepository;
 using SignupSystem.Models;
+using SignupSystem.Models.DTO.Class;
 using SignupSystem.Models.DTO.Lecturer;
 using SignupSystem.Models.DTO.Student;
+using SignupSystem.Models.DTO.Subject;
 using SignupSystem.Models.Response;
 using SignupSystem.Services.Lecturer.Interfaces;
 using SignupSystem.Utilities;
 
 namespace SignupSystem.Services.Lecturer
 {
-	public class LecturerService : ControllerBase, ILecturerService
+    public class LecturerService : ControllerBase, ILecturerService
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IWebHostEnvironment _webHost;
@@ -65,16 +67,7 @@ namespace SignupSystem.Services.Lecturer
 			}
 			return res;
 		}
-		public async Task<ApiResponse<GetClassesResponseDTO>> GetClassesAsync()
-		{
-			var classes = await _unitOfWork.Class.GetAll().ToListAsync();
-
-			ApiResponse<GetClassesResponseDTO> res = new();
-			res.Result.Classes = classes;
-
-			return res;
-		}
-
+	
 		public async Task<ApiResponse<GetLecturersResponseDTO>> SearchLecturersAsync(string search)
 		{
 			var lecturers = await _unitOfWork.ApplicationUser
@@ -102,7 +95,6 @@ namespace SignupSystem.Services.Lecturer
 			}
 			return res;
 		}
-
 		public async Task<ApiResponse<object>> AddLecturerAsync(AddLecturerRequestDTO model)
 		{
 			if (ModelState.IsValid)
@@ -281,7 +273,6 @@ namespace SignupSystem.Services.Lecturer
 			}
 			return _res;
 		}
-
 		public async Task<ApiResponse<object>> DeleteLecturerAsync(string userId)
 		{
 			if (string.IsNullOrEmpty(userId))
@@ -326,9 +317,75 @@ namespace SignupSystem.Services.Lecturer
 			return _res;
 		}
 
-		public async Task<ApiResponse<object>> GetTeachingScheduleAsync()
+		//new
+
+		public async Task<ApiResponse<object>> GetAndSearchTeachingAssignmentAsync(string? search, int classId)
 		{
-			throw new NotImplementedException();
+			var teachingAssignment = new List<AssignClassTeaching>();
+
+			//lấy theo search
+			if (string.IsNullOrEmpty(search))
+			{
+				//lấy tất cả phân công giảng dạy
+				teachingAssignment = await _unitOfWork.AssignClassTeaching.GetAll().ToListAsync();
+			}
+			else
+			{
+				//lấy các phân công giảng dạy theo tìm kiếm và có IsLecturer == true
+				teachingAssignment = await _unitOfWork.AssignClassTeaching
+				   .Get(x => x.ApplicationUser.IsLecturer == true && (
+				   x.ApplicationUser.UserCode.Contains(search) ||
+				   x.ApplicationUser.FirstName.Contains(search) ||
+				   x.ApplicationUser.LastName.Contains(search) ||
+				   x.Subject.Name.Contains(search)), true)
+				   .ToListAsync();
+			}
+
+			//lọc theo lớp
+			if (classId == 0)
+			{
+				//tìm kiếm tất cả phân công giảng dạy
+				_res.Result = teachingAssignment;
+			}
+			else
+			{
+				//tìm kiếm tất cả phân công giảng dạy theo lớp
+				_res.Result = teachingAssignment.Where(x => x.ClassId == classId);
+
+			}
+			return _res;
+		}
+		public ApiResponse<object> AddTeachingAssignmentAsync(AddTeachingAssignmentRequestDTO model)
+		{
+			if (ModelState.IsValid)
+			{
+				if (model.ClassId == 0 || model.SubjectId == 0)
+				{
+					_res.IsSuccess = false;
+					return _res;
+				}
+
+				AssignClassTeaching assignClassTeaching = new()
+				{
+					DayOfWeek = model.DayOfWeek,
+					StartTime = model.StartTime,
+					EndTime = model.EndTime,
+					StartDay = model.StartDay,
+					EndDay = model.EndDay,
+					ClassId = model.ClassId,
+					SubjectId = model.SubjectId,
+					ApplicationUserId = model.LecturerId,
+					Details = model.Detail,
+				};
+
+				_unitOfWork.AssignClassTeaching.Add(assignClassTeaching);
+				_unitOfWork.Save();
+
+				_res.Messages = "Đã thêm lịch giảng dạy thành công.";
+				return _res;
+			}
+			_res.IsSuccess = false;
+			return _res;
 		}
 	}
 }

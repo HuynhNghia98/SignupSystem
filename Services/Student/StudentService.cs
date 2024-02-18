@@ -7,6 +7,7 @@ using SignupSystem.DataAccess.Data;
 using SignupSystem.DataAccess.Repository.IRepository;
 using SignupSystem.Models;
 using SignupSystem.Models.DTO.Auth;
+using SignupSystem.Models.DTO.Class;
 using SignupSystem.Models.DTO.ForgotPassword;
 using SignupSystem.Models.DTO.Student;
 using SignupSystem.Models.Response;
@@ -16,7 +17,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace SignupSystem.Services.Student
 {
-	public class StudentService : ControllerBase, IStudentService
+    public class StudentService : ControllerBase, IStudentService
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IWebHostEnvironment _webHost;
@@ -75,16 +76,6 @@ namespace SignupSystem.Services.Student
 
 				res.Result.Student = student;
 			}
-			return res;
-		}
-
-		public async Task<ApiResponse<GetClassesResponseDTO>> GetClassesAsync()
-		{
-			var classes = await _unitOfWork.Class.GetAll().ToListAsync();
-
-			ApiResponse<GetClassesResponseDTO> res = new();
-			res.Result.Classes = classes;
-
 			return res;
 		}
 
@@ -434,8 +425,6 @@ namespace SignupSystem.Services.Student
 			_res.Messages = "Đăng ký lớp thành công.";
 			return _res;
 		}
-
-		/// new
 
 		public async Task<ApiResponse<object>> GetStudentSchedulesAsync()
 		{

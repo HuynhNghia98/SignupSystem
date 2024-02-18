@@ -288,17 +288,28 @@ namespace SignupSystem.Migrations
                     b.Property<string>("Details")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("EndDay")
+                        .HasColumnType("datetime2");
+
                     b.Property<TimeSpan>("EndTime")
                         .HasColumnType("time");
 
+                    b.Property<DateTime>("StartDay")
+                        .HasColumnType("datetime2");
+
                     b.Property<TimeSpan>("StartTime")
                         .HasColumnType("time");
+
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("ClassId");
+
+                    b.HasIndex("SubjectId");
 
                     b.ToTable("AssignClassTeaches");
                 });
@@ -311,10 +322,18 @@ namespace SignupSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ClassCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double>("Fee")
                         .HasColumnType("float");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SchoolYear")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -353,6 +372,10 @@ namespace SignupSystem.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Details")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FacultyCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -453,6 +476,10 @@ namespace SignupSystem.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubjectCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -557,9 +584,17 @@ namespace SignupSystem.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SignupSystem.Models.Subject", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("Class");
+
+                    b.Navigation("Subject");
                 });
 
             modelBuilder.Entity("SignupSystem.Models.RegisterClass", b =>

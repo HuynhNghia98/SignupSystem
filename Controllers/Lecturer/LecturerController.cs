@@ -46,21 +46,6 @@ namespace SignupSystem.Controllers.Lecturer
 			}
 		}
 
-		[HttpGet("GetClasses")]
-		public async Task<IActionResult> GetClasses()
-		{
-			var result = await _lecturerService.GetClassesAsync();
-
-			if (result.IsSuccess)
-			{
-				return Ok(result);
-			}
-			else
-			{
-				return BadRequest(result);
-			}
-		}
-
 		[HttpPost("SearchLecturers")]
 		public async Task<IActionResult> SearchLecturers([FromForm] string search)
 		{
@@ -110,6 +95,36 @@ namespace SignupSystem.Controllers.Lecturer
 		public async Task<IActionResult> DeleteLecturer(string id)
 		{
 			var result = await _lecturerService.DeleteLecturerAsync(id);
+
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+		}
+
+		[HttpPost("GetAndSearchTeachingAssignmen")]
+		public async Task<IActionResult> GetAndSearchTeachingAssignmen([FromForm] string? search, [FromForm] int classId)
+		{
+			var result = await _lecturerService.GetAndSearchTeachingAssignmentAsync(search,classId);
+
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+		}
+
+		[HttpPost("AddTeachingAssignment")]
+		public IActionResult AddTeachingAssignment([FromForm] AddTeachingAssignmentRequestDTO model)
+		{
+			var result = _lecturerService.AddTeachingAssignmentAsync(model);
 
 			if (result.IsSuccess)
 			{

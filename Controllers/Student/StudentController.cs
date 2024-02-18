@@ -46,20 +46,6 @@ namespace SignupSystem.Controllers.Student
 			}
 		}
 
-		[HttpGet("GetClasses")]
-		public async Task<IActionResult> GetClasses()
-		{
-			var result = await _studentService.GetClassesAsync();
-			if (result.IsSuccess)
-			{
-				return Ok(result);
-			}
-			else
-			{
-				return BadRequest(result);
-			}
-		}
-
 		[HttpPost("SearchStudents")]
 		public async Task<IActionResult> SearchStudents([FromForm] string search)
 		{

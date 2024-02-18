@@ -18,7 +18,13 @@ namespace SignupSystem.Models
 		public TimeSpan EndTime { get; set; }
 
 		[Required]
-		public DateTime CreateTime { get; set; }
+		public DateTime StartDay { get; set; }
+
+		[Required]
+		public DateTime EndDay { get; set; }
+
+		[Required]
+		public DateTime CreateTime { get; set; } = DateTime.Now;
 
 		public string? Details { get; set; } = string.Empty;
 
@@ -31,5 +37,10 @@ namespace SignupSystem.Models
 		public int ClassId { get; set; }
 		[ForeignKey("ClassId")]
 		public Class Class { get; set; }
+
+		[Required]
+		public int SubjectId { get; set; }
+		[ForeignKey("SubjectId")]
+		public Subject Subject { get; set; }
 	}
 }

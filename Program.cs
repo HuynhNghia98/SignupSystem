@@ -17,6 +17,10 @@ using SignupSystem.Services.Student.Interfaces;
 using SignupSystem.Services.Student;
 using SignupSystem.Services.Lecturer.Interfaces;
 using SignupSystem.Services.Lecturer;
+using Microsoft.OpenApi.Any;
+using Microsoft.Extensions.Options;
+using SignupSystem.Services.Class.Interfaces;
+using SignupSystem.Services.Class;
 
 namespace SignupSystem
 {
@@ -61,6 +65,11 @@ namespace SignupSystem
 						},
 						new List<string>()
 					}
+				});
+				o.MapType<TimeSpan>(() => new OpenApiSchema
+				{
+					Type = "string",
+					Example = new OpenApiString("00:00:00")
 				});
 			});
 
@@ -115,6 +124,7 @@ namespace SignupSystem
 			builder.Services.AddScoped<IForgotPasswordService, ForgotPasswordService>();
 			builder.Services.AddScoped<IStudentService, StudentService>();
 			builder.Services.AddScoped<ILecturerService, LecturerService>();
+			builder.Services.AddScoped<IClassService, ClassService>();
 
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
