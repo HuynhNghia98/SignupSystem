@@ -19,6 +19,9 @@ namespace SignupSystem.DataAccess.Data
 		public DbSet<FeeType> FeeTypes { get; set; }
 		public DbSet<Subject> Subjects { get; set; }
 		public DbSet<SubjectTeach> SubjectTeaches { get; set; }
+		public DbSet<TrainingCourse> TrainingCourses { get; set; }
+		public DbSet<Score> Scores { get; set; }
+		public DbSet<ScoreType> ScoreTypes { get; set; }
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);

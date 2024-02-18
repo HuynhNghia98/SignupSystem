@@ -341,7 +341,12 @@ namespace SignupSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TrainingCourseId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TrainingCourseId");
 
                     b.ToTable("Classes");
                 });
@@ -461,6 +466,66 @@ namespace SignupSystem.Migrations
                     b.ToTable("RegisterCourses");
                 });
 
+            modelBuilder.Entity("SignupSystem.Models.Score", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ClassId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Creatime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("ScoreOfStudent")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ScoreTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("ScoreTypeId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("Scores");
+                });
+
+            modelBuilder.Entity("SignupSystem.Models.ScoreType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Coefficient")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NameType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ScoreTypes");
+                });
+
             modelBuilder.Entity("SignupSystem.Models.Subject", b =>
                 {
                     b.Property<int>("Id")
@@ -520,6 +585,36 @@ namespace SignupSystem.Migrations
                     b.HasIndex("SubjectId");
 
                     b.ToTable("SubjectTeaches");
+                });
+
+            modelBuilder.Entity("SignupSystem.Models.TrainingCourse", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Details")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TrainingCourseCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TrainingCourses");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -600,6 +695,17 @@ namespace SignupSystem.Migrations
                     b.Navigation("Subject");
                 });
 
+            modelBuilder.Entity("SignupSystem.Models.Class", b =>
+                {
+                    b.HasOne("SignupSystem.Models.TrainingCourse", "TrainingCourse")
+                        .WithMany("Classes")
+                        .HasForeignKey("TrainingCourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TrainingCourse");
+                });
+
             modelBuilder.Entity("SignupSystem.Models.RegisterClass", b =>
                 {
                     b.HasOne("SignupSystem.Models.ApplicationUser", "ApplicationUser")
@@ -625,6 +731,41 @@ namespace SignupSystem.Migrations
                     b.Navigation("Class");
 
                     b.Navigation("FeeType");
+                });
+
+            modelBuilder.Entity("SignupSystem.Models.Score", b =>
+                {
+                    b.HasOne("SignupSystem.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("Scores")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignupSystem.Models.Class", "Class")
+                        .WithMany("Scores")
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignupSystem.Models.ScoreType", "ScoreType")
+                        .WithMany("Scores")
+                        .HasForeignKey("ScoreTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignupSystem.Models.Subject", "Subject")
+                        .WithMany("Scores")
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Class");
+
+                    b.Navigation("ScoreType");
+
+                    b.Navigation("Subject");
                 });
 
             modelBuilder.Entity("SignupSystem.Models.Subject", b =>
@@ -669,6 +810,8 @@ namespace SignupSystem.Migrations
                 {
                     b.Navigation("RegisterClasses");
 
+                    b.Navigation("Scores");
+
                     b.Navigation("SubjectTeaches");
                 });
 
@@ -677,6 +820,8 @@ namespace SignupSystem.Migrations
                     b.Navigation("AssignClassTeaches");
 
                     b.Navigation("RegisterClasses");
+
+                    b.Navigation("Scores");
                 });
 
             modelBuilder.Entity("SignupSystem.Models.Department", b =>
@@ -694,9 +839,21 @@ namespace SignupSystem.Migrations
                     b.Navigation("RegisterClasses");
                 });
 
+            modelBuilder.Entity("SignupSystem.Models.ScoreType", b =>
+                {
+                    b.Navigation("Scores");
+                });
+
             modelBuilder.Entity("SignupSystem.Models.Subject", b =>
                 {
+                    b.Navigation("Scores");
+
                     b.Navigation("SubjectTeaches");
+                });
+
+            modelBuilder.Entity("SignupSystem.Models.TrainingCourse", b =>
+                {
+                    b.Navigation("Classes");
                 });
 #pragma warning restore 612, 618
         }

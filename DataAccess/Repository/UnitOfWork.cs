@@ -16,6 +16,9 @@ namespace SignupSystem.DataAccess.Repository
 		public IRegisterClassRepository RegisterClass { get; private set; }
 		public ISubjectRepository Subject { get; private set; }
 		public ISubjectTeachRepository SubjectTeach { get; private set; }
+		public IScoreRepository Score { get; private set; }
+		public IScoreTypeRepository ScoreType { get; private set; }
+		public ITrainingCourseRepository TrainingCourse { get; private set; }
 
 		public UnitOfWork(ApplicationDbContext db)
 		{
@@ -29,6 +32,9 @@ namespace SignupSystem.DataAccess.Repository
 			RegisterClass = new RegisterClassRepository(_db);
 			Subject = new SubjectRepository(_db);
 			SubjectTeach = new SubjectTeachRepository(_db);
+			Score = new ScoreRepository(_db);
+			ScoreType = new ScoreTypeRepository(_db);
+			TrainingCourse = new TrainingCourseRepository(_db);
 		}
 
 		public void Save()

@@ -12,6 +12,9 @@ namespace SignupSystem.DataAccess.Repository.IRepository
 		IRegisterClassRepository RegisterClass { get; }
 		ISubjectRepository Subject { get; }
 		ISubjectTeachRepository SubjectTeach { get; }
+		IScoreRepository Score { get; }
+		IScoreTypeRepository ScoreType { get; }
+		ITrainingCourseRepository TrainingCourse { get; }
 
 		void Save();
 	}
