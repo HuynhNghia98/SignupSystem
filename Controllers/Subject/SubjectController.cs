@@ -78,7 +78,7 @@ namespace SignupSystem.Controllers.Subject
 
 		}
 
-		[HttpPost("UpdateSubject/{id}")]
+		[HttpPut("UpdateSubject/{id}")]
 		public async Task<IActionResult> UpdateSubject(int id, [FromForm] AddOrUpdateSubjectRequestDTO model)
 		{
 			var result = await _subjectService.UpdateSubjectAsync(id, model);

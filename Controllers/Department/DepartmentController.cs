@@ -78,7 +78,7 @@ namespace SignupSystem.Controllers.Department
 
 		}
 
-		[HttpPost("UpdateDepartment/{id}")]
+		[HttpPut("UpdateDepartment/{id}")]
 		public async Task<IActionResult> UpdateDepartment(int id, [FromForm] AddOrUpdateDepartmentRequestDTO model)
 		{
 			var result = await _department.UpdateDepartmentAsync(id, model);

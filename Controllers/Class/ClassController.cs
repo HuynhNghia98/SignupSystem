@@ -88,7 +88,7 @@ namespace SignupSystem.Controllers.Class
 
 		}
 
-		[HttpPost("UpdateClass/{id}")]
+		[HttpPut("UpdateClass/{id}")]
 		public async Task<IActionResult> UpdateClass(int id, [FromForm] AddOrUpdateClassRequestDTO model)
 		{
 			var result = await _classService.UpdateClassAsync(id, model);

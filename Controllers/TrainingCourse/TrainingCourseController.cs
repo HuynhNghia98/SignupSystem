@@ -81,7 +81,7 @@ namespace SignupSystem.Controllers.TrainingCourse
 
 		}
 
-		[HttpPost("UpdateTrainingCourse/{id}")]
+		[HttpPut("UpdateTrainingCourse/{id}")]
 		public async Task<IActionResult> UpdateTrainingCourse(int id, [FromForm] AddOrUpdateTrainingCourseRequestDTO model)
 		{
 			var result = await _trainingCourse.UpdateTrainingCourseAsync(id, model);

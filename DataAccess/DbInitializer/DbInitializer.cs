@@ -68,7 +68,15 @@ namespace SignupSystem.DataAccess.DbInitializer
 					Name = "khoa dao tao 1",
 				};
 				_unitOfWork.TrainingCourse.Add(trainingCourse);
+				//Tạo Khoa
+				Faculty faculty = new()
+				{
+					FacultyCode = "K01",
+					Name = "khoa IT",
+				};
+				_unitOfWork.Faculty.Add(faculty);
 				_unitOfWork.Save();
+
 
 				//Tạo class
 				List<Class> newClassToAdd = new()
@@ -80,6 +88,8 @@ namespace SignupSystem.DataAccess.DbInitializer
 						Fee = 1000000,
 						Status = true,
 						TrainingCourseId=1,
+						FacultyId=1,
+
 					},
 					new Class()
 					{
@@ -88,6 +98,7 @@ namespace SignupSystem.DataAccess.DbInitializer
 						Fee = 1000000,
 						Status = true,
 						TrainingCourseId=1,
+						FacultyId=1,
 					},
 				};
 				foreach (var item in newClassToAdd)
@@ -95,14 +106,6 @@ namespace SignupSystem.DataAccess.DbInitializer
 					_unitOfWork.Class.Add(item);
 				}
 
-				//Tạo khoa
-				Faculty faculty = new()
-				{
-					Name = "Khoa Mỹ Thuật",
-					Details = "Dạy các môn về mỹ thuật"
-				};
-				_unitOfWork.Faculty.Add(faculty);
-				_unitOfWork.Save();
 				//Tạo bộ môn
 				Department department = new()
 				{

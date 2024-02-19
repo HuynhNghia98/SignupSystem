@@ -81,7 +81,7 @@ namespace SignupSystem.Controllers.Faculty
 
 		}
 
-		[HttpPost("UpdateFaculty/{id}")]
+		[HttpPut("UpdateFaculty/{id}")]
 		public async Task<IActionResult> UpdateFaculty(int id, [FromForm] AddOrUpdateFacultyRequestDTO model)
 		{
 			var result = await _faculty.UpdateFacultyAsync(id, model);

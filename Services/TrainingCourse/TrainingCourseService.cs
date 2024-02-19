@@ -95,8 +95,8 @@ namespace SignupSystem.Services.TrainningCourse
 					return _res;
 				}
 
+				trainingCourseInDb.TrainingCourseCode = model.TrainingCourseCode;
 				trainingCourseInDb.Name = model.TrainingCourseName;
-				trainingCourseInDb.TrainingCourseCode = model.TrainingCourseName;
 
 				_unitOfWork.TrainingCourse.Update(trainingCourseInDb);
 				_unitOfWork.Save();

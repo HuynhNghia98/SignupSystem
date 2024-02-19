@@ -62,7 +62,7 @@ namespace SignupSystem.Controllers.ScoreType
 
 		}
 
-		[HttpPost("UpdateScoreType/{id}")]
+		[HttpPut("UpdateScoreType/{id}")]
 		public async Task<IActionResult> UpdateScoreType(int id, [FromForm] AddOrUpdateScoreTypeRequestDTO model)
 		{
 			var result = await _scoreType.UpdateScoreTypeAsync(id, model);
