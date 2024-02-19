@@ -28,6 +28,10 @@ using SignupSystem.Services.Department.Interfaces;
 using SignupSystem.Services.Department;
 using SignupSystem.Services.Faculty.Interfaces;
 using SignupSystem.Services.Faculty;
+using SignupSystem.Services.ScoreType.Interface;
+using SignupSystem.Services.ScoreType;
+using SignupSystem.Services.SubjectScoreType.Interface;
+using SignupSystem.Services.SubjectScoreType;
 
 namespace SignupSystem
 {
@@ -124,6 +128,7 @@ namespace SignupSystem
 			//builder.Services.AddCors();
 			builder.Services.AddCors();
 
+			//register services
 			builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 			builder.Services.AddScoped<IAuthService, AuthService>();
 			builder.Services.AddScoped<IDbInitializer, DbInitializer>();
@@ -136,6 +141,8 @@ namespace SignupSystem
 			builder.Services.AddScoped<ITrainingCourseService, TrainingCourseService>();
 			builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 			builder.Services.AddScoped<IFacultyService, FacultyService>();
+			builder.Services.AddScoped<IScoreTypeService, ScoreTypeService>();
+			builder.Services.AddScoped<ISubjectScoreTypeService, SubjectScoreTypeService>();
 
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();

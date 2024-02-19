@@ -8,7 +8,7 @@ namespace SignupSystem.DataAccess.Repository
 	{
 		public ApplicationDbContext _db;
 		public IApplicationUserRepository ApplicationUser { get; private set; }
-		public IAssignClassTeachingRepository AssignClassTeaching { get; private set; }
+		public IAssignClassTeachRepository AssignClassTeach { get; private set; }
 		public IClassRepository Class { get; private set; }
 		public IDepartmentRepository Department { get; private set; }
 		public IFacultyRepository Faculty { get; private set; }
@@ -16,6 +16,7 @@ namespace SignupSystem.DataAccess.Repository
 		public IRegisterClassRepository RegisterClass { get; private set; }
 		public ISubjectRepository Subject { get; private set; }
 		public ISubjectTeachRepository SubjectTeach { get; private set; }
+		public ISubjectScoreTypeRepository SubjectScoreType { get; private set; }
 		public IScoreRepository Score { get; private set; }
 		public IScoreTypeRepository ScoreType { get; private set; }
 		public ITrainingCourseRepository TrainingCourse { get; private set; }
@@ -24,7 +25,7 @@ namespace SignupSystem.DataAccess.Repository
 		{
 			_db = db;
 			ApplicationUser = new ApplicationUserRepository(_db);
-			AssignClassTeaching = new AssignClassTeachingRepository(_db);
+			AssignClassTeach = new AssignClassTeachingRepository(_db);
 			Class = new ClassRepository(_db);
 			Department = new DepartmentRepository(_db);
 			Faculty = new FacultyRepository(_db);
@@ -32,6 +33,7 @@ namespace SignupSystem.DataAccess.Repository
 			RegisterClass = new RegisterClassRepository(_db);
 			Subject = new SubjectRepository(_db);
 			SubjectTeach = new SubjectTeachRepository(_db);
+			SubjectScoreType = new SubjectScoreTypeRepository(_db);
 			Score = new ScoreRepository(_db);
 			ScoreType = new ScoreTypeRepository(_db);
 			TrainingCourse = new TrainingCourseRepository(_db);

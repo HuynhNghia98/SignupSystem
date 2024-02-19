@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SignupSystem.Models
 {
-	public class AssignClassTeaching
+	public class AssignClassTeach
 	{
 		[Key]
 		public int Id { get; set; }
@@ -41,6 +41,6 @@ namespace SignupSystem.Models
 		[Required]
 		public int SubjectId { get; set; }
 		[ForeignKey("SubjectId")]
-		public Subject Subject { get; set; }
+		public virtual Subject Subject { get; set; }
 	}
 }

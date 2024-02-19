@@ -16,5 +16,6 @@ namespace SignupSystem.Models
 		public string? Details { get; set; } = string.Empty;
 
 		public ICollection<Class>? Classes { get; set; }
+		public ICollection<SubjectScoreType>? SubjectScoreTypes { get; set; }
 	}
 }

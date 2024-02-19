@@ -14,5 +14,6 @@ namespace SignupSystem.Models
 		public int Coefficient { get; set; }
 
 		public ICollection<Score>? Scores { get; set; }
+		public ICollection<SubjectScoreType>? SubjectScoreTypes { get; set; }
 	}
 }

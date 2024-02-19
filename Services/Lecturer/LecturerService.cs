@@ -321,18 +321,18 @@ namespace SignupSystem.Services.Lecturer
 
 		public async Task<ApiResponse<object>> GetAndSearchTeachingAssignmentAsync(string? search, int classId)
 		{
-			var teachingAssignment = new List<AssignClassTeaching>();
+			var teachingAssignment = new List<AssignClassTeach>();
 
 			//lấy theo search
 			if (string.IsNullOrEmpty(search))
 			{
 				//lấy tất cả phân công giảng dạy
-				teachingAssignment = await _unitOfWork.AssignClassTeaching.GetAll().ToListAsync();
+				teachingAssignment = await _unitOfWork.AssignClassTeach.GetAll().ToListAsync();
 			}
 			else
 			{
 				//lấy các phân công giảng dạy theo tìm kiếm và có IsLecturer == true
-				teachingAssignment = await _unitOfWork.AssignClassTeaching
+				teachingAssignment = await _unitOfWork.AssignClassTeach
 				   .Get(x => x.ApplicationUser.IsLecturer == true && (
 				   x.ApplicationUser.UserCode.Contains(search) ||
 				   x.ApplicationUser.FirstName.Contains(search) ||
@@ -365,7 +365,7 @@ namespace SignupSystem.Services.Lecturer
 					return _res;
 				}
 
-				AssignClassTeaching assignClassTeaching = new()
+				AssignClassTeach assignClassTeaching = new()
 				{
 					DayOfWeek = model.DayOfWeek,
 					StartTime = model.StartTime,
@@ -378,7 +378,7 @@ namespace SignupSystem.Services.Lecturer
 					Details = model.Detail,
 				};
 
-				_unitOfWork.AssignClassTeaching.Add(assignClassTeaching);
+				_unitOfWork.AssignClassTeach.Add(assignClassTeaching);
 				_unitOfWork.Save();
 
 				_res.Messages = "Đã thêm lịch giảng dạy thành công.";

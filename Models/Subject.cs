@@ -24,6 +24,8 @@ namespace SignupSystem.Models
 		public Department Department { get; set; }
 
 		public ICollection<SubjectTeach>? SubjectTeaches { get; set; }
+		public ICollection<AssignClassTeach>? AssignClassTeaches { get; set; }
 		public ICollection<Score>? Scores { get; set; }
+		public ICollection<SubjectScoreType>? SubjectScoreTypes { get; set; }
 	}
 }

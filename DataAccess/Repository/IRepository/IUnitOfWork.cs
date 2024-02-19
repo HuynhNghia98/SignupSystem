@@ -4,7 +4,7 @@ namespace SignupSystem.DataAccess.Repository.IRepository
 	public interface IUnitOfWork
 	{
 		IApplicationUserRepository ApplicationUser { get; }
-		IAssignClassTeachingRepository AssignClassTeaching { get; }
+		IAssignClassTeachRepository AssignClassTeach { get; }
 		IClassRepository Class { get; }
 		IDepartmentRepository Department { get; }
 		IFacultyRepository Faculty { get; }
@@ -12,6 +12,7 @@ namespace SignupSystem.DataAccess.Repository.IRepository
 		IRegisterClassRepository RegisterClass { get; }
 		ISubjectRepository Subject { get; }
 		ISubjectTeachRepository SubjectTeach { get; }
+		ISubjectScoreTypeRepository SubjectScoreType { get; }
 		IScoreRepository Score { get; }
 		IScoreTypeRepository ScoreType { get; }
 		ITrainingCourseRepository TrainingCourse { get; }

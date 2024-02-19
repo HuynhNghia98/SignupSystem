@@ -12,7 +12,7 @@ using SignupSystem.DataAccess.Data;
 namespace SignupSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240218060942_AddAllTables")]
+    [Migration("20240219035315_AddAllTables")]
     partial class AddAllTables
     {
         /// <inheritdoc />
@@ -266,7 +266,7 @@ namespace SignupSystem.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("SignupSystem.Models.AssignClassTeaching", b =>
+            modelBuilder.Entity("SignupSystem.Models.AssignClassTeach", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -329,25 +329,34 @@ namespace SignupSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Detail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FacultyId")
+                        .HasColumnType("int");
+
                     b.Property<double>("Fee")
                         .HasColumnType("float");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SchoolYear")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("StudentQuantity")
+                        .HasColumnType("int");
 
                     b.Property<int>("TrainingCourseId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FacultyId");
 
                     b.HasIndex("TrainingCourseId");
 
@@ -563,6 +572,40 @@ namespace SignupSystem.Migrations
                     b.ToTable("Subjects");
                 });
 
+            modelBuilder.Entity("SignupSystem.Models.SubjectScoreType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MandatoryScoreColumn")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ScoreColumn")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ScoreTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TrainingCourseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ScoreTypeId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.HasIndex("TrainingCourseId");
+
+                    b.ToTable("SubjectScoreType");
+                });
+
             modelBuilder.Entity("SignupSystem.Models.SubjectTeach", b =>
                 {
                     b.Property<int>("Id")
@@ -671,10 +714,10 @@ namespace SignupSystem.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SignupSystem.Models.AssignClassTeaching", b =>
+            modelBuilder.Entity("SignupSystem.Models.AssignClassTeach", b =>
                 {
                     b.HasOne("SignupSystem.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
+                        .WithMany("AssignClassTeaches")
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -686,9 +729,9 @@ namespace SignupSystem.Migrations
                         .IsRequired();
 
                     b.HasOne("SignupSystem.Models.Subject", "Subject")
-                        .WithMany()
+                        .WithMany("AssignClassTeaches")
                         .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("ApplicationUser");
@@ -700,11 +743,19 @@ namespace SignupSystem.Migrations
 
             modelBuilder.Entity("SignupSystem.Models.Class", b =>
                 {
+                    b.HasOne("SignupSystem.Models.Faculty", "Faculty")
+                        .WithMany("Classes")
+                        .HasForeignKey("FacultyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SignupSystem.Models.TrainingCourse", "TrainingCourse")
                         .WithMany("Classes")
                         .HasForeignKey("TrainingCourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Faculty");
 
                     b.Navigation("TrainingCourse");
                 });
@@ -759,7 +810,7 @@ namespace SignupSystem.Migrations
                     b.HasOne("SignupSystem.Models.Subject", "Subject")
                         .WithMany("Scores")
                         .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("ApplicationUser");
@@ -790,6 +841,33 @@ namespace SignupSystem.Migrations
                     b.Navigation("Faculty");
                 });
 
+            modelBuilder.Entity("SignupSystem.Models.SubjectScoreType", b =>
+                {
+                    b.HasOne("SignupSystem.Models.ScoreType", "ScoreType")
+                        .WithMany("SubjectScoreTypes")
+                        .HasForeignKey("ScoreTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignupSystem.Models.Subject", "Subject")
+                        .WithMany("SubjectScoreTypes")
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignupSystem.Models.TrainingCourse", "TrainingCourse")
+                        .WithMany("SubjectScoreTypes")
+                        .HasForeignKey("TrainingCourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ScoreType");
+
+                    b.Navigation("Subject");
+
+                    b.Navigation("TrainingCourse");
+                });
+
             modelBuilder.Entity("SignupSystem.Models.SubjectTeach", b =>
                 {
                     b.HasOne("SignupSystem.Models.ApplicationUser", "ApplicationUser")
@@ -811,6 +889,8 @@ namespace SignupSystem.Migrations
 
             modelBuilder.Entity("SignupSystem.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("AssignClassTeaches");
+
                     b.Navigation("RegisterClasses");
 
                     b.Navigation("Scores");
@@ -834,6 +914,8 @@ namespace SignupSystem.Migrations
 
             modelBuilder.Entity("SignupSystem.Models.Faculty", b =>
                 {
+                    b.Navigation("Classes");
+
                     b.Navigation("Subjects");
                 });
 
@@ -845,11 +927,17 @@ namespace SignupSystem.Migrations
             modelBuilder.Entity("SignupSystem.Models.ScoreType", b =>
                 {
                     b.Navigation("Scores");
+
+                    b.Navigation("SubjectScoreTypes");
                 });
 
             modelBuilder.Entity("SignupSystem.Models.Subject", b =>
                 {
+                    b.Navigation("AssignClassTeaches");
+
                     b.Navigation("Scores");
+
+                    b.Navigation("SubjectScoreTypes");
 
                     b.Navigation("SubjectTeaches");
                 });
@@ -857,6 +945,8 @@ namespace SignupSystem.Migrations
             modelBuilder.Entity("SignupSystem.Models.TrainingCourse", b =>
                 {
                     b.Navigation("Classes");
+
+                    b.Navigation("SubjectScoreTypes");
                 });
 #pragma warning restore 612, 618
         }

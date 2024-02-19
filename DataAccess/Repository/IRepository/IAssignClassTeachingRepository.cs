@@ -2,8 +2,8 @@
 
 namespace SignupSystem.DataAccess.Repository.IRepository
 {
-	public interface IAssignClassTeachingRepository : IRepository<AssignClassTeaching>
+	public interface IAssignClassTeachRepository : IRepository<AssignClassTeach>
 	{
-		void Update(AssignClassTeaching assignClassTeaching);
+		void Update(AssignClassTeach assignClassTeaching);
 	}
 }

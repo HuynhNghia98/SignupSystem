@@ -209,7 +209,7 @@ namespace SignupSystem.Services.Class
 
 		public async Task<ApiResponse<GetSubjectsResponseDTO>> GetSubjectListOfClassAsync(int classId)
 		{
-			var assignClassTeachingList = await _unitOfWork.AssignClassTeaching
+			var assignClassTeachingList = await _unitOfWork.AssignClassTeach
 				.Get(x => x.ClassId == classId, true)
 				.Include(x => x.Subject)
 				.ToListAsync();

@@ -31,7 +31,7 @@ namespace SignupSystem.Models
 		public TrainingCourse TrainingCourse { get; set; }
 
 		public ICollection<RegisterClass>? RegisterClasses { get; set; }
-		public ICollection<AssignClassTeaching>? AssignClassTeaches { get; set; }
+		public ICollection<AssignClassTeach>? AssignClassTeaches { get; set; }
 		public ICollection<Score>? Scores { get; set; }
 	}
 }

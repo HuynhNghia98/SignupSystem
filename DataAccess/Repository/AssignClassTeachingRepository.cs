@@ -4,13 +4,13 @@ using SignupSystem.Models;
 
 namespace SignupSystem.DataAccess.Repository
 {
-	public class AssignClassTeachingRepository : Repository<AssignClassTeaching>, IAssignClassTeachingRepository
+	public class AssignClassTeachingRepository : Repository<AssignClassTeach>, IAssignClassTeachRepository
 	{
 		public AssignClassTeachingRepository(ApplicationDbContext db) : base(db)
 		{
 		}
 
-		public void Update(AssignClassTeaching assignClassTeaching)
+		public void Update(AssignClassTeach assignClassTeaching)
 		{
 			_db.Update(assignClassTeaching);
 		}

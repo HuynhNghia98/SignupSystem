@@ -195,14 +195,23 @@ namespace SignupSystem.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClassCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SchoolYear = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Fee = table.Column<double>(type: "float", nullable: false),
+                    StudentQuantity = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Detail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FacultyId = table.Column<int>(type: "int", nullable: false),
                     TrainingCourseId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Classes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Classes_Faculties_FacultyId",
+                        column: x => x.FacultyId,
+                        principalTable: "Faculties",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Classes_TrainingCourses_TrainingCourseId",
                         column: x => x.TrainingCourseId,
@@ -297,6 +306,41 @@ namespace SignupSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SubjectScoreType",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ScoreColumn = table.Column<int>(type: "int", nullable: false),
+                    MandatoryScoreColumn = table.Column<int>(type: "int", nullable: false),
+                    SubjectId = table.Column<int>(type: "int", nullable: false),
+                    TrainingCourseId = table.Column<int>(type: "int", nullable: false),
+                    ScoreTypeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubjectScoreType", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SubjectScoreType_ScoreTypes_ScoreTypeId",
+                        column: x => x.ScoreTypeId,
+                        principalTable: "ScoreTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SubjectScoreType_Subjects_SubjectId",
+                        column: x => x.SubjectId,
+                        principalTable: "Subjects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SubjectScoreType_TrainingCourses_TrainingCourseId",
+                        column: x => x.TrainingCourseId,
+                        principalTable: "TrainingCourses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SubjectTeaches",
                 columns: table => new
                 {
@@ -353,8 +397,7 @@ namespace SignupSystem.Migrations
                         name: "FK_AssignClassTeaches_Subjects_SubjectId",
                         column: x => x.SubjectId,
                         principalTable: "Subjects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_AssignClassTeaches_Users_ApplicationUserId",
                         column: x => x.ApplicationUserId,
@@ -434,8 +477,7 @@ namespace SignupSystem.Migrations
                         name: "FK_Scores_Subjects_SubjectId",
                         column: x => x.SubjectId,
                         principalTable: "Subjects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Scores_Users_ApplicationUserId",
                         column: x => x.ApplicationUserId,
@@ -458,6 +500,11 @@ namespace SignupSystem.Migrations
                 name: "IX_AssignClassTeaches_SubjectId",
                 table: "AssignClassTeaches",
                 column: "SubjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Classes_FacultyId",
+                table: "Classes",
+                column: "FacultyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Classes_TrainingCourseId",
@@ -522,6 +569,21 @@ namespace SignupSystem.Migrations
                 column: "FacultyId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SubjectScoreType_ScoreTypeId",
+                table: "SubjectScoreType",
+                column: "ScoreTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubjectScoreType_SubjectId",
+                table: "SubjectScoreType",
+                column: "SubjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubjectScoreType_TrainingCourseId",
+                table: "SubjectScoreType",
+                column: "TrainingCourseId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SubjectTeaches_ApplicationUserId",
                 table: "SubjectTeaches",
                 column: "ApplicationUserId");
@@ -573,6 +635,9 @@ namespace SignupSystem.Migrations
 
             migrationBuilder.DropTable(
                 name: "Scores");
+
+            migrationBuilder.DropTable(
+                name: "SubjectScoreType");
 
             migrationBuilder.DropTable(
                 name: "SubjectTeaches");
