@@ -335,6 +335,9 @@ namespace SignupSystem.Migrations
                     b.Property<double>("Fee")
                         .HasColumnType("float");
 
+                    b.Property<bool>("FinalizeStudentScores")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 

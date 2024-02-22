@@ -18,5 +18,6 @@ namespace SignupSystem.DataAccess.Repository.IRepository
 		ITrainingCourseRepository TrainingCourse { get; }
 
 		void Save();
+		void SaveAsync();
 	}
 }

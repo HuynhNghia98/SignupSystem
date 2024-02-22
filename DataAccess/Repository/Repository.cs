@@ -19,7 +19,12 @@ namespace SignupSystem.DataAccess.Repository
             dbSet.Add(entity);
         }
 
-        public T Find(int id)
+		public void AddAsync(T entity)
+		{
+			dbSet.AddAsync(entity);
+		}
+
+		public T Find(int id)
         {
             return dbSet.Find(id);
         }

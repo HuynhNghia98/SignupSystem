@@ -9,7 +9,8 @@ namespace SignupSystem.DataAccess.Repository.IRepository
         IQueryable<T> GetAll();
 		IQueryable<T> Get(Expression<Func<T, bool>> filter, bool asNoTracking);
         void Add(T entity);
-        void Remove(T entity);
+		void AddAsync(T entity);
+		void Remove(T entity);
         void RemoveRange(IEnumerable<T> entities);
     }
 }

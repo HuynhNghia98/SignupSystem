@@ -26,7 +26,7 @@ namespace SignupSystem.Controllers.Class
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -42,7 +42,7 @@ namespace SignupSystem.Controllers.Class
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -67,7 +67,7 @@ namespace SignupSystem.Controllers.Class
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -83,7 +83,7 @@ namespace SignupSystem.Controllers.Class
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -99,7 +99,7 @@ namespace SignupSystem.Controllers.Class
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -115,9 +115,132 @@ namespace SignupSystem.Controllers.Class
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
+		}
+
+		[HttpGet("GetSubjectListOfClass/{id}")]
+		public async Task<IActionResult> GetSubjectListOfClass(int id)
+		{
+			var result = await _classService.GetSubjectListOfClassAsync(id);
+
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+
+		}
+
+		[HttpGet("GetStudentListOfClass/{id}")]
+		public async Task<IActionResult> GetStudentListOfClass(int id)
+		{
+			var result = await _classService.GetStudentListOfClassAsync(id);
+
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+
+		}
+
+		[HttpPost("AddScoreForStudent")]
+		public async Task<IActionResult> AddScoreForStudent([FromForm] AddScoreForStudentRequestDTO model)
+		{
+			var result = await _classService.AddScoreForStudentAsync(model);
+
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+
+		}
+
+		[HttpPost("AddScoreForStudents")]
+		public async Task<IActionResult> AddScoreForStudents([FromBody] AddScoreForStudentsRequestDTO model)
+		{
+			var result = await _classService.AddScoreForStudentsAsync(model);
+
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+		}
+
+		[HttpPut("UpdateScoreForStudent")]
+		public async Task<IActionResult> UpdateScoreForStudent([FromBody] UpdateScoresForStudentRequestDTO model)
+		{
+			var result = await _classService.UpdateScoreForStudentAsync(model);
+
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+		}
+
+		[HttpPost("GetScoreOfClass")]
+		public async Task<IActionResult> GetScoreOfClass([FromForm] int classId, [FromForm] int subjectId)
+		{
+			var result = await _classService.GetScoreOfClassAsync(classId, subjectId);
+
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+		}
+
+		[HttpPut("FinalizeStudentScores")]
+		public async Task<IActionResult> FinalizeStudentScores([FromForm] int classId)
+		{
+			var result = await _classService.FinalizeStudentScoresAsync(classId);
+
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+		}
+
+		[HttpPost("GetScoresOfStudent")]
+		public async Task<IActionResult> GetScoresOfStudent([FromForm] int classId, [FromForm] string studentId)
+		{
+			var result = await _classService.GetScoresOfStudentAsync(classId, studentId);
+
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
 		}
 	}
 }

@@ -198,6 +198,7 @@ namespace SignupSystem.Migrations
                     Fee = table.Column<double>(type: "float", nullable: false),
                     StudentQuantity = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
+                    FinalizeStudentScores = table.Column<bool>(type: "bit", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Detail = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FacultyId = table.Column<int>(type: "int", nullable: false),

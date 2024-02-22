@@ -17,7 +17,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace SignupSystem.Services.Student
 {
-    public class StudentService : ControllerBase, IStudentService
+	public class StudentService : ControllerBase, IStudentService
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IWebHostEnvironment _webHost;
@@ -408,6 +408,7 @@ namespace SignupSystem.Services.Student
 
 				return _res;
 			}
+
 			//đăng ký lớp và trạng thái chưa thanh toán
 			var registerClass = new RegisterClass()
 			{
@@ -426,9 +427,26 @@ namespace SignupSystem.Services.Student
 			return _res;
 		}
 
-		public async Task<ApiResponse<object>> GetStudentSchedulesAsync()
+		public async Task<ApiResponse<GetStudentSchedulesResponseDTO>> GetStudentSchedulesAsync(string studentId)
 		{
-			throw new NotImplementedException();
+			ApiResponse<GetStudentSchedulesResponseDTO> res = new();
+			if (string.IsNullOrEmpty(studentId))
+			{
+				res.IsSuccess = false;
+				return res;
+			}
+
+			//lấy ra các đăng ký lớp học, bao gồm cả thông tin lớp, phân công giảng dạy
+			var schedules = await _unitOfWork.RegisterClass.Get(x => x.ApplicationUserId == studentId, true)
+				.Include(x => x.Class)
+				.ThenInclude(x => x.AssignClassTeaches)
+				.ToListAsync();
+
+			//chuyển thành danh sách lớp
+			var classesOfStudent = schedules.Select(x => x.Class).ToList();
+
+			res.Result.Classes = classesOfStudent;
+			return res;
 		}
 
 		public async Task<ApiResponse<object>> PaySchoolFeeAsync(int id, PayFeeRequestDTO model)

@@ -12,7 +12,7 @@ using SignupSystem.DataAccess.Data;
 namespace SignupSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240219035315_AddAllTables")]
+    [Migration("20240221045253_AddAllTables")]
     partial class AddAllTables
     {
         /// <inheritdoc />
@@ -337,6 +337,9 @@ namespace SignupSystem.Migrations
 
                     b.Property<double>("Fee")
                         .HasColumnType("float");
+
+                    b.Property<bool>("FinalizeStudentScores")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");

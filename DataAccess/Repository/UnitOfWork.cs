@@ -44,5 +44,9 @@ namespace SignupSystem.DataAccess.Repository
 			_db.SaveChanges();
 		}
 
+		public void SaveAsync()
+		{
+			_db.SaveChangesAsync();
+		}
 	}
 }

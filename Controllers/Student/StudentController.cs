@@ -159,5 +159,19 @@ namespace SignupSystem.Controllers.Student
 				return BadRequest(result);
 			}
 		}
+
+		[HttpGet("GetStudentSchedules/{id}")]
+		public async Task<IActionResult> GetStudentSchedules(string id)
+		{
+			var result = await _studentService.GetStudentSchedulesAsync(id);
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+		}
 	}
 }
