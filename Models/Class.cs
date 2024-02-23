@@ -16,13 +16,11 @@ namespace SignupSystem.Models
 		[Required]
 		public int StudentQuantity { get; set; }
 		[Required]
-		public bool Status { get; set; }
+		public bool OpenStatus { get; set; } = true;
 		[Required]
 		public bool FinalizeStudentScores { get; set; } = false;
 		public string? ImageUrl { get; set; }
 		public string? Detail { get; set; } = string.Empty;
-
-
 
 		[Required]
 		public int FacultyId { get; set; }

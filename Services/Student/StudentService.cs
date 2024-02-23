@@ -49,7 +49,6 @@ namespace SignupSystem.Services.Student
 			}
 			return res;
 		}
-
 		public async Task<ApiResponse<GetStudentResponseDTO>> GetStudentAsync(string id)
 		{
 			var student = await _unitOfWork.ApplicationUser.Get(x => x.Id == id, true).FirstOrDefaultAsync();
@@ -78,7 +77,6 @@ namespace SignupSystem.Services.Student
 			}
 			return res;
 		}
-
 		public async Task<ApiResponse<GetStudentsResponseDTO>> SearchStudentsAsync(string search)
 		{
 			var student = await _unitOfWork.ApplicationUser
@@ -106,7 +104,6 @@ namespace SignupSystem.Services.Student
 			}
 			return res;
 		}
-
 		public async Task<ApiResponse<object>> AddStudentAsync(AddStudentRequestDTO model)
 		{
 			if (ModelState.IsValid)
@@ -206,7 +203,6 @@ namespace SignupSystem.Services.Student
 			}
 			return _res;
 		}
-
 		public async Task<ApiResponse<object>> UpdateStudentAsync(string id, UpdateStudentRequestDTO model)
 		{
 			if (ModelState.IsValid)
@@ -291,7 +287,6 @@ namespace SignupSystem.Services.Student
 			}
 			return _res;
 		}
-
 		public async Task<ApiResponse<object>> DeleteStudentAsync(string id)
 		{
 			if (string.IsNullOrEmpty(id))
@@ -335,7 +330,6 @@ namespace SignupSystem.Services.Student
 			}
 			return _res;
 		}
-
 		public async Task<ApiResponse<GetStudentClassesResponseDTO>> GetStudentClassesAsync(string id)
 		{
 			ApiResponse<GetStudentClassesResponseDTO> res = new();
@@ -363,7 +357,6 @@ namespace SignupSystem.Services.Student
 			}
 			return res;
 		}
-
 		public async Task<ApiResponse<object>> DeleteStudentRegisteredClassAsync(int id)
 		{
 			if (id == 0)
@@ -391,12 +384,11 @@ namespace SignupSystem.Services.Student
 			}
 			return _res;
 		}
-
-		public ApiResponse<object> RegisterClassForStudent(string userId, int classId)
+		public async Task<ApiResponse<object>> RegisterClassForStudent(string userId, int classId)
 		{
 			if (string.IsNullOrEmpty(userId) || classId == 0) { _res.IsSuccess = false; return _res; };
 
-			var classinfor = _unitOfWork.Class.Get(x => x.Id == classId, true).FirstOrDefault();
+			var classinfor = await _unitOfWork.Class.Get(x => x.Id == classId, true).FirstOrDefaultAsync();
 
 			if (classinfor == null)
 			{
@@ -409,24 +401,67 @@ namespace SignupSystem.Services.Student
 				return _res;
 			}
 
-			//đăng ký lớp và trạng thái chưa thanh toán
-			var registerClass = new RegisterClass()
+			//kiểm tra lớp có mở chưa
+			if (classinfor.OpenStatus == false)
 			{
-				ApplicationUserId = userId,
-				ClassId = classId,
-				Fee = classinfor.Fee,
-				Discount = 0,
-				PaymentStatus = SD.Payment_UnPaid,
-				PaymentDetails = "",
-				FeeTypeId = 1,
-			};
-			_unitOfWork.RegisterClass.Add(registerClass);
-			_unitOfWork.Save();
+				_res.IsSuccess = false;
+				_res.Errors = new Dictionary<string, List<string>>
+					{
+						{ "classId", new List<string> { "Lớp chưa mở." } }
+					};
 
-			_res.Messages = "Đăng ký lớp thành công.";
+				return _res;
+			}
+
+			//kiểm tra trùng
+			var registerdClassInDb = await _unitOfWork.RegisterClass
+				.Get(x => x.ClassId == classId && x.ApplicationUserId == userId, true)
+				.Include(x => x.Class)
+				.FirstOrDefaultAsync();
+			if (registerdClassInDb != null)
+			{
+				_res.IsSuccess = false;
+				_res.Errors = new Dictionary<string, List<string>>
+					{
+						{ "classId", new List<string> { $"Đã đăng ký lớp {registerdClassInDb.Class.Name} cho học viên rồi." } }
+					};
+
+				return _res;
+			}
+
+			//kiểm tra lớp có đủ học viên chưa
+			var registeredClasses = await _unitOfWork.RegisterClass
+				.Get(x => x.ClassId == classId, true)
+				.ToListAsync();
+
+			if (registeredClasses.Count < classinfor.StudentQuantity)
+			{
+				//đăng ký lớp và trạng thái chưa thanh toán
+				var newRegisterClass = new RegisterClass()
+				{
+					ApplicationUserId = userId,
+					ClassId = classId,
+					Fee = classinfor.Fee,
+					Discount = 0,
+					PaymentStatus = SD.Payment_UnPaid,
+					PaymentDetails = "",
+					FeeTypeId = 1,
+				};
+				_unitOfWork.RegisterClass.AddAsync(newRegisterClass);
+				_unitOfWork.SaveAsync();
+
+				_res.Messages = "Đăng ký lớp thành công.";
+			}
+			else
+			{
+				_res.IsSuccess = false;
+				_res.Errors = new Dictionary<string, List<string>>
+					{
+						{ "classId", new List<string> { "Lớp đã đủ số học viên." } }
+					};
+			}
 			return _res;
 		}
-
 		public async Task<ApiResponse<GetStudentSchedulesResponseDTO>> GetStudentSchedulesAsync(string studentId)
 		{
 			ApiResponse<GetStudentSchedulesResponseDTO> res = new();
@@ -448,7 +483,6 @@ namespace SignupSystem.Services.Student
 			res.Result.Classes = classesOfStudent;
 			return res;
 		}
-
 		public async Task<ApiResponse<object>> PaySchoolFeeAsync(int id, PayFeeRequestDTO model)
 		{
 			if (id == 0)

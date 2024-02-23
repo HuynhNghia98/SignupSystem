@@ -28,7 +28,6 @@ namespace SignupSystem.Services.SubjectScoreType
 
 			return res;
 		}
-
 		public async Task<ApiResponse<Models.SubjectScoreType>> GetSubjectScoreTypeAsync(int id)
 		{
 			var subjectScoreTypeInDb = await _unitOfWork.SubjectScoreType.Get(x => x.Id == id, true).FirstOrDefaultAsync();
@@ -45,7 +44,6 @@ namespace SignupSystem.Services.SubjectScoreType
 			}
 			return res;
 		}
-
 		public async Task<ApiResponse<GetSubjectScoreTypeResponseDTO>> SearchSubjectScoreTypesAsync(string search)
 		{
 			var subjectScoreTypeInDb = await _unitOfWork.SubjectScoreType
@@ -79,7 +77,6 @@ namespace SignupSystem.Services.SubjectScoreType
 			_res.IsSuccess = false;
 			return _res;
 		}
-
 		public async Task<ApiResponse<object>> UpdateSubjectScoreTypeAsync(int id, AddOrUpdateSubjectScoreTypeRequestDTO model)
 		{
 			if (id == 0)
@@ -113,7 +110,6 @@ namespace SignupSystem.Services.SubjectScoreType
 			_res.IsSuccess = false;
 			return _res;
 		}
-
 		public async Task<ApiResponse<object>> DeleteSubjectScoreTypeAsync(int id)
 		{
 			if (id == 0)

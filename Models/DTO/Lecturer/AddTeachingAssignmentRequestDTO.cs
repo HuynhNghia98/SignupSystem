@@ -13,7 +13,7 @@ namespace SignupSystem.Models.DTO.Lecturer
 		[Required(ErrorMessage = "Nhập phòng học")]
 		public string Room { get; set; } = string.Empty;
 		[Required(ErrorMessage = "Nhập thứ")]
-		public string DayOfWeek { get; set; } = string.Empty;
+		public int DayOfWeek { get; set; }
 
 		// Giờ học
 		[Required(ErrorMessage = "Nhập giờ bắt đầu học")]

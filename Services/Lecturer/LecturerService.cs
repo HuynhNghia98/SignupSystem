@@ -15,7 +15,7 @@ using SignupSystem.Utilities;
 
 namespace SignupSystem.Services.Lecturer
 {
-    public class LecturerService : ControllerBase, ILecturerService
+	public class LecturerService : ControllerBase, ILecturerService
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IWebHostEnvironment _webHost;
@@ -67,7 +67,6 @@ namespace SignupSystem.Services.Lecturer
 			}
 			return res;
 		}
-	
 		public async Task<ApiResponse<GetLecturersResponseDTO>> SearchLecturersAsync(string search)
 		{
 			var lecturers = await _unitOfWork.ApplicationUser
@@ -316,9 +315,6 @@ namespace SignupSystem.Services.Lecturer
 			}
 			return _res;
 		}
-
-		//new
-
 		public async Task<ApiResponse<object>> GetAndSearchTeachingAssignmentAsync(string? search, int classId)
 		{
 			var teachingAssignment = new List<AssignClassTeach>();
@@ -355,7 +351,7 @@ namespace SignupSystem.Services.Lecturer
 			}
 			return _res;
 		}
-		public ApiResponse<object> AddTeachingAssignmentAsync(AddTeachingAssignmentRequestDTO model)
+		public async Task<ApiResponse<object>> AddTeachingAssignmentAsync(AddTeachingAssignmentRequestDTO model)
 		{
 			if (ModelState.IsValid)
 			{
@@ -365,7 +361,64 @@ namespace SignupSystem.Services.Lecturer
 					return _res;
 				}
 
-				AssignClassTeach assignClassTeaching = new()
+				if (model.DayOfWeek < 2 || model.DayOfWeek > 8)
+				{
+					_res.IsSuccess = false;
+					_res.Errors = new Dictionary<string, List<string>>
+					{
+						{ "dayOfWeek", new List<string> { "Chọn thứ từ thứ 2 đến chủ nhật (2-8)." } }
+					};
+
+					return _res;
+				}
+
+				//kiểm tra lớp có chưa
+				var classinfor = await _unitOfWork.Class.Get(x => x.Id == model.ClassId, true).FirstOrDefaultAsync();
+
+				if (classinfor == null)
+				{
+					_res.IsSuccess = false;
+					_res.Errors = new Dictionary<string, List<string>>
+					{
+						{ "classId", new List<string> { "Không thể tìm thấy lớp." } }
+					};
+
+					return _res;
+				}
+
+				//Kiểm tra trùng
+				var assignClassTeachingInDb = await _unitOfWork.AssignClassTeach
+					.Get(x => x.ApplicationUserId == model.LecturerId &&
+								x.ClassId == model.ClassId &&
+								x.SubjectId == model.SubjectId &&
+								x.DayOfWeek == model.DayOfWeek &&
+								x.StartTime == model.StartTime , true)
+					.FirstOrDefaultAsync();
+
+				if (assignClassTeachingInDb != null)
+				{
+					_res.IsSuccess = false;
+					_res.Errors = new Dictionary<string, List<string>>
+					{
+						{ "classId", new List<string> { "Đã phân công giảng dạy lớp này." } }
+					};
+
+					return _res;
+				}
+
+				//kiểm tra lớp có mở chưa
+				if (classinfor.OpenStatus == false)
+				{
+					_res.IsSuccess = false;
+					_res.Errors = new Dictionary<string, List<string>>
+					{
+						{ "classId", new List<string> { "Lớp chưa mở." } }
+					};
+
+					return _res;
+				}
+
+				AssignClassTeach newwAssignClassTeach = new()
 				{
 					DayOfWeek = model.DayOfWeek,
 					StartTime = model.StartTime,
@@ -378,7 +431,7 @@ namespace SignupSystem.Services.Lecturer
 					Details = model.Detail,
 				};
 
-				_unitOfWork.AssignClassTeach.Add(assignClassTeaching);
+				_unitOfWork.AssignClassTeach.Add(newwAssignClassTeach);
 				_unitOfWork.Save();
 
 				_res.Messages = "Đã thêm lịch giảng dạy thành công.";

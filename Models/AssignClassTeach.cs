@@ -9,7 +9,7 @@ namespace SignupSystem.Models
 		public int Id { get; set; }
 
 		[Required]
-		public string DayOfWeek { get; set; } = string.Empty;
+		public int DayOfWeek { get; set; }
 
 		[Required]
 		public TimeSpan StartTime { get; set; }

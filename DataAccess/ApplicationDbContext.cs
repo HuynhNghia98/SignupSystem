@@ -22,6 +22,7 @@ namespace SignupSystem.DataAccess.Data
 		public DbSet<TrainingCourse> TrainingCourses { get; set; }
 		public DbSet<Score> Scores { get; set; }
 		public DbSet<ScoreType> ScoreTypes { get; set; }
+		public DbSet<Vacation> Vacations { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

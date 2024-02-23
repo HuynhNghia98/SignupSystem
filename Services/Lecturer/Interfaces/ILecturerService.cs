@@ -14,7 +14,7 @@ namespace SignupSystem.Services.Lecturer.Interfaces
 		Task<ApiResponse<object>> UpdateLecturerAsync(string userId, UpdateLecturerRequestDTO model);
 		Task<ApiResponse<object>> DeleteLecturerAsync(string userId);
 		Task<ApiResponse<object>> GetAndSearchTeachingAssignmentAsync(string? search, int classId);
-		ApiResponse<object> AddTeachingAssignmentAsync(AddTeachingAssignmentRequestDTO model);
+		Task<ApiResponse<object>> AddTeachingAssignmentAsync(AddTeachingAssignmentRequestDTO model);
 
 	}
 }

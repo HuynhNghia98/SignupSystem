@@ -73,7 +73,7 @@ namespace SignupSystem.Services.Class
 					Fee = model.Fee,
 					StudentQuantity = model.StudentQuantity,
 					Detail = model.Detail,
-					Status = model.Status,
+					OpenStatus = model.OpenStatus,
 				};
 
 				//add image
@@ -125,7 +125,7 @@ namespace SignupSystem.Services.Class
 				classInDb.Fee = model.Fee;
 				classInDb.StudentQuantity = model.StudentQuantity;
 				classInDb.Detail = model.Detail;
-				classInDb.Status = model.Status;
+				classInDb.OpenStatus = model.OpenStatus;
 
 				//update image
 				if (model.File != null && model.File.Length > 0)
@@ -207,9 +207,6 @@ namespace SignupSystem.Services.Class
 			_res.Messages = "Đã xóa lớp thành công";
 			return _res;
 		}
-
-		//new 
-
 		public async Task<ApiResponse<GetSubjectsResponseDTO>> GetSubjectListOfClassAsync(int classId)
 		{
 			var assignClassTeachingList = await _unitOfWork.AssignClassTeach
@@ -223,7 +220,6 @@ namespace SignupSystem.Services.Class
 			res.Result.Subjects = subjectList;
 			return res;
 		}
-
 		public async Task<ApiResponse<GetStudentsResponseDTO>> GetStudentListOfClassAsync(int classId)
 		{
 			var registerClassList = await _unitOfWork.RegisterClass
@@ -237,7 +233,6 @@ namespace SignupSystem.Services.Class
 			res.Result.Students = studentList;
 			return res;
 		}
-
 		public async Task<ApiResponse<object>> AddScoreForStudentAsync(AddScoreForStudentRequestDTO model)
 		{
 			if (model.ScoreTypeId == 0 || model.ClassId == 0 || model.SubjectId == 0 || string.IsNullOrEmpty(model.StudentId))
@@ -313,7 +308,6 @@ namespace SignupSystem.Services.Class
 			}
 			return _res;
 		}
-
 		public async Task<ApiResponse<object>> AddScoreForStudentsAsync(AddScoreForStudentsRequestDTO model)
 		{
 			if (model.ScoreTypeId == 0 || model.ClassId == 0 || model.SubjectId == 0)
@@ -394,7 +388,6 @@ namespace SignupSystem.Services.Class
 			_res.Messages = "Thêm điểm thành công";
 			return _res;
 		}
-
 		public async Task<ApiResponse<object>> UpdateScoreForStudentAsync(UpdateScoresForStudentRequestDTO model)
 		{
 			if (model.ClassId == 0 || string.IsNullOrEmpty(model.StudentId))
@@ -505,7 +498,6 @@ namespace SignupSystem.Services.Class
 			_res.Messages = "Cập nhật điểm thành công";
 			return _res;
 		}
-
 		public async Task<ApiResponse<GetScoreOfClassResponseDTO>> GetScoreOfClassAsync(int classId, int subjectId)
 		{
 			ApiResponse<GetScoreOfClassResponseDTO> res = new();
@@ -542,7 +534,6 @@ namespace SignupSystem.Services.Class
 			res.Result.SubjectScoreTypes = subjectScoreTypeOfClass;
 			return res;
 		}
-
 		public async Task<ApiResponse<object>> FinalizeStudentScoresAsync(int classId)
 		{
 			if (classId == 0)
@@ -567,7 +558,6 @@ namespace SignupSystem.Services.Class
 			_res.Messages = "Đã chốt điểm";
 			return _res;
 		}
-
 		public async Task<ApiResponse<GetScoresOfStudentResponseDTO>> GetScoresOfStudentAsync(int classId, string studentId)
 		{
 			ApiResponse<GetScoresOfStudentResponseDTO> res = new();

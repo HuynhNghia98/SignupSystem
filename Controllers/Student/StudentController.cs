@@ -132,9 +132,9 @@ namespace SignupSystem.Controllers.Student
 		}
 
 		[HttpPost("RegisterClass/{id}")]
-		public IActionResult RegisterClass(string id, [FromForm] int classId)
+		public async Task<IActionResult> RegisterClass(string id, [FromForm] int classId)
 		{
-			var result = _studentService.RegisterClassForStudent(id, classId);
+			var result = await _studentService.RegisterClassForStudent(id, classId);
 			if (result.IsSuccess)
 			{
 				return Ok(result);

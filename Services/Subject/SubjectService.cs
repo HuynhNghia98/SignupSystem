@@ -25,7 +25,6 @@ namespace SignupSystem.Services.Subject
 
 			return res;
 		}
-
 		public async Task<ApiResponse<Models.Subject>> GetSubjectAsync(int id)
 		{
 			var subjectInDb = await _unitOfWork.Subject.Get(x => x.Id == id, true).FirstOrDefaultAsync();
@@ -42,7 +41,6 @@ namespace SignupSystem.Services.Subject
 			}
 			return res;
 		}
-
 		public async Task<ApiResponse<GetSubjectsResponseDTO>> SearchSubjectsAsync(string search)
 		{
 			var subjectsInDb = await _unitOfWork.Subject.Get(x => x.SubjectCode.Contains(search) ||
@@ -55,7 +53,6 @@ namespace SignupSystem.Services.Subject
 
 			return res;
 		}
-
 		public ApiResponse<object> AddSubjectAsync(AddOrUpdateSubjectRequestDTO model)
 		{
 			if (ModelState.IsValid)
@@ -77,7 +74,6 @@ namespace SignupSystem.Services.Subject
 			_res.IsSuccess = false;
 			return _res;
 		}
-
 		public async Task<ApiResponse<object>> UpdateSubjectAsync(int subjectId, AddOrUpdateSubjectRequestDTO model)
 		{
 			if (subjectId == 0)
@@ -110,7 +106,6 @@ namespace SignupSystem.Services.Subject
 			_res.IsSuccess = false;
 			return _res;
 		}
-
 		public async Task<ApiResponse<object>> DeleteSubjectAsync(int subjectId)
 		{
 			if (subjectId == 0)

@@ -20,7 +20,7 @@ namespace SignupSystem.DataAccess.Repository
 		public IScoreRepository Score { get; private set; }
 		public IScoreTypeRepository ScoreType { get; private set; }
 		public ITrainingCourseRepository TrainingCourse { get; private set; }
-
+		public IVacationRepository Vacation { get; private set; }
 		public UnitOfWork(ApplicationDbContext db)
 		{
 			_db = db;
@@ -37,6 +37,7 @@ namespace SignupSystem.DataAccess.Repository
 			Score = new ScoreRepository(_db);
 			ScoreType = new ScoreTypeRepository(_db);
 			TrainingCourse = new TrainingCourseRepository(_db);
+			Vacation= new VacationRepository(_db);
 		}
 
 		public void Save()

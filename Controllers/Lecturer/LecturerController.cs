@@ -122,9 +122,9 @@ namespace SignupSystem.Controllers.Lecturer
 		}
 
 		[HttpPost("AddTeachingAssignment")]
-		public IActionResult AddTeachingAssignment([FromForm] AddTeachingAssignmentRequestDTO model)
+		public async Task<IActionResult> AddTeachingAssignment([FromForm] AddTeachingAssignmentRequestDTO model)
 		{
-			var result = _lecturerService.AddTeachingAssignmentAsync(model);
+			var result = await _lecturerService.AddTeachingAssignmentAsync(model);
 
 			if (result.IsSuccess)
 			{

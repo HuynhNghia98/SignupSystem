@@ -17,7 +17,7 @@ namespace SignupSystem.Models.DTO.Class
 		[Required(ErrorMessage = "Nhập học phí lớp")]
 		public double Fee { get; set; }
 		public string? Detail { get; set; } = string.Empty;
-		public bool Status { get; set; } = false;
+		public bool OpenStatus { get; set; } = true;
 		public IFormFile? File { get; set; }
 
 	}
