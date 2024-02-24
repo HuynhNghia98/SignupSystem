@@ -12,7 +12,7 @@ using SignupSystem.DataAccess.Data;
 namespace SignupSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240221045253_AddAllTables")]
+    [Migration("20240223040032_AddAllTables")]
     partial class AddAllTables
     {
         /// <inheritdoc />
@@ -284,9 +284,8 @@ namespace SignupSystem.Migrations
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DayOfWeek")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("int");
 
                     b.Property<string>("Details")
                         .HasColumnType("nvarchar(max)");
@@ -348,7 +347,7 @@ namespace SignupSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Status")
+                    b.Property<bool>("OpenStatus")
                         .HasColumnType("bit");
 
                     b.Property<int>("StudentQuantity")
@@ -664,6 +663,33 @@ namespace SignupSystem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TrainingCourses");
+                });
+
+            modelBuilder.Entity("SignupSystem.Models.Vacation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("EndDay")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDay")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("VacationName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Vacations");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

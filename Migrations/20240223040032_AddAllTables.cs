@@ -138,6 +138,22 @@ namespace SignupSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Vacations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    VacationName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StartDay = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDay = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Vacations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Subjects",
                 columns: table => new
                 {
@@ -197,7 +213,7 @@ namespace SignupSystem.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Fee = table.Column<double>(type: "float", nullable: false),
                     StudentQuantity = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    OpenStatus = table.Column<bool>(type: "bit", nullable: false),
                     FinalizeStudentScores = table.Column<bool>(type: "bit", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Detail = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -374,7 +390,7 @@ namespace SignupSystem.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DayOfWeek = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DayOfWeek = table.Column<int>(type: "int", nullable: false),
                     StartTime = table.Column<TimeSpan>(type: "time", nullable: false),
                     EndTime = table.Column<TimeSpan>(type: "time", nullable: false),
                     StartDay = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -654,6 +670,9 @@ namespace SignupSystem.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Vacations");
 
             migrationBuilder.DropTable(
                 name: "FeeTypes");
