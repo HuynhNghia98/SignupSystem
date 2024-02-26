@@ -27,7 +27,6 @@ namespace SignupSystem.Services.TrainningCourse
 
 			return res;
 		}
-
 		public async Task<ApiResponse<TrainingCourse>> GetTrainingCourseAsync(int id)
 		{
 			var trainingCourseInDb = await _unitOfWork.TrainingCourse.Get(x => x.Id == id, true).FirstOrDefaultAsync();
@@ -44,7 +43,6 @@ namespace SignupSystem.Services.TrainningCourse
 			}
 			return res;
 		}
-
 		public async Task<ApiResponse<GetTrainingCoursesResponseDTO>> SearchTrainingCourseAsync(string search)
 		{
 			var trainingCourseInDb = await _unitOfWork.TrainingCourse.Get(x => x.TrainingCourseCode.Contains(search) ||
@@ -56,7 +54,6 @@ namespace SignupSystem.Services.TrainningCourse
 
 			return res;
 		}
-
 		public ApiResponse<object> AddTrainingCourseAsync(AddOrUpdateTrainingCourseRequestDTO model)
 		{
 			if (ModelState.IsValid)
@@ -76,7 +73,6 @@ namespace SignupSystem.Services.TrainningCourse
 			_res.IsSuccess = false;
 			return _res;
 		}
-
 		public async Task<ApiResponse<object>> UpdateTrainingCourseAsync(int id, AddOrUpdateTrainingCourseRequestDTO model)
 		{
 			if (id == 0)
@@ -107,7 +103,6 @@ namespace SignupSystem.Services.TrainningCourse
 			_res.IsSuccess = false;
 			return _res;
 		}
-
 		public async Task<ApiResponse<object>> DeleteTrainingCourseAsync(int id)
 		{
 			if (id == 0)
@@ -130,12 +125,26 @@ namespace SignupSystem.Services.TrainningCourse
 			_res.Messages = "Đã xóa khóa thành công";
 			return _res;
 		}
-
-		public async Task<ApiResponse<object>> CopyTrainingCourseAsync(int id)
+		public ApiResponse<object> CopyTrainingCourseAsync(CopyTraningCourseRequestDTO model)
 		{
-			throw new NotImplementedException();
-		}
+			if (ModelState.IsValid)
+			{
+				Models.TrainingCourse newTrainingCourse = new()
+				{
+					TrainingCourseCode = model.TrainingCourseCode,
+					Name = model.TrainingCourseName,
+					StartDate = model.StartDay,
+					EndDate = model.EndDay,
+				};
 
-	
+				_unitOfWork.TrainingCourse.Add(newTrainingCourse);
+				_unitOfWork.Save();
+
+				_res.Messages = "Đã sao chép khóa thành công";
+				return _res;
+			}
+			_res.IsSuccess = false;
+			return _res;
+		}
 	}
 }

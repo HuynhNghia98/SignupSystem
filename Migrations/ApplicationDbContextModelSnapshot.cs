@@ -225,6 +225,7 @@ namespace SignupSystem.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
@@ -477,6 +478,45 @@ namespace SignupSystem.Migrations
                     b.ToTable("RegisterCourses");
                 });
 
+            modelBuilder.Entity("SignupSystem.Models.Salary", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<double?>("Allowance")
+                        .HasColumnType("float");
+
+                    b.Property<string>("AllowanceName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("SalaryDay")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("SalaryOfEmployee")
+                        .HasColumnType("float");
+
+                    b.Property<int>("TrainingCourseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("TrainingCourseId");
+
+                    b.ToTable("Salaries");
+                });
+
             modelBuilder.Entity("SignupSystem.Models.Score", b =>
                 {
                     b.Property<int>("Id")
@@ -640,17 +680,17 @@ namespace SignupSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Details")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("EndDate")
+                    b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsFinalizingSalary")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("StartDate")
+                    b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TrainingCourseCode")
@@ -813,6 +853,25 @@ namespace SignupSystem.Migrations
                     b.Navigation("FeeType");
                 });
 
+            modelBuilder.Entity("SignupSystem.Models.Salary", b =>
+                {
+                    b.HasOne("SignupSystem.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("Salaries")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignupSystem.Models.TrainingCourse", "TrainingCourse")
+                        .WithMany("Salaries")
+                        .HasForeignKey("TrainingCourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("TrainingCourse");
+                });
+
             modelBuilder.Entity("SignupSystem.Models.Score", b =>
                 {
                     b.HasOne("SignupSystem.Models.ApplicationUser", "ApplicationUser")
@@ -919,6 +978,8 @@ namespace SignupSystem.Migrations
 
                     b.Navigation("RegisterClasses");
 
+                    b.Navigation("Salaries");
+
                     b.Navigation("Scores");
 
                     b.Navigation("SubjectTeaches");
@@ -971,6 +1032,8 @@ namespace SignupSystem.Migrations
             modelBuilder.Entity("SignupSystem.Models.TrainingCourse", b =>
                 {
                     b.Navigation("Classes");
+
+                    b.Navigation("Salaries");
 
                     b.Navigation("SubjectScoreTypes");
                 });

@@ -17,6 +17,7 @@ namespace SignupSystem.DataAccess.Repository.IRepository
 		IScoreTypeRepository ScoreType { get; }
 		ITrainingCourseRepository TrainingCourse { get; }
 		IVacationRepository Vacation { get; }
+		ISalaryRepository Salary { get; }
 		void Save();
 		void SaveAsync();
 	}

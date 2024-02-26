@@ -26,7 +26,7 @@ namespace SignupSystem.Controllers.Vacation
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -42,7 +42,7 @@ namespace SignupSystem.Controllers.Vacation
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -58,7 +58,7 @@ namespace SignupSystem.Controllers.Vacation
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -74,7 +74,7 @@ namespace SignupSystem.Controllers.Vacation
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -90,7 +90,7 @@ namespace SignupSystem.Controllers.Vacation
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -106,7 +106,7 @@ namespace SignupSystem.Controllers.Vacation
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}

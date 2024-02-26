@@ -34,6 +34,8 @@ using SignupSystem.Services.SubjectScoreType.Interface;
 using SignupSystem.Services.SubjectScoreType;
 using SignupSystem.Services.Vacation.Interface;
 using SignupSystem.Services.Vacation;
+using SignupSystem.Services.Revenue.Interface;
+using SignupSystem.Services.Revenue;
 
 namespace SignupSystem
 {
@@ -146,6 +148,7 @@ namespace SignupSystem
 			builder.Services.AddScoped<IScoreTypeService, ScoreTypeService>();
 			builder.Services.AddScoped<ISubjectScoreTypeService, SubjectScoreTypeService>();
 			builder.Services.AddScoped<IVacationService, VacationService>();
+			builder.Services.AddScoped<IRevenueService, RevenueService>();
 
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();

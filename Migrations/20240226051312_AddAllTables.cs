@@ -90,9 +90,9 @@ namespace SignupSystem.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TrainingCourseCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Details = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsFinalizingSalary = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -109,7 +109,7 @@ namespace SignupSystem.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Gender = table.Column<int>(type: "int", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TaxCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsStudent = table.Column<bool>(type: "bit", nullable: true),
                     IsLecturer = table.Column<bool>(type: "bit", nullable: true),
@@ -233,6 +233,37 @@ namespace SignupSystem.Migrations
                         name: "FK_Classes_TrainingCourses_TrainingCourseId",
                         column: x => x.TrainingCourseId,
                         principalTable: "TrainingCourses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Salaries",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SalaryOfEmployee = table.Column<double>(type: "float", nullable: false),
+                    AllowanceName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Allowance = table.Column<double>(type: "float", nullable: true),
+                    SalaryDay = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TrainingCourseId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Salaries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Salaries_TrainingCourses_TrainingCourseId",
+                        column: x => x.TrainingCourseId,
+                        principalTable: "TrainingCourses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Salaries_Users_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -556,6 +587,16 @@ namespace SignupSystem.Migrations
                 filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Salaries_ApplicationUserId",
+                table: "Salaries",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Salaries_TrainingCourseId",
+                table: "Salaries",
+                column: "TrainingCourseId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Scores_ApplicationUserId",
                 table: "Scores",
                 column: "ApplicationUserId");
@@ -649,6 +690,9 @@ namespace SignupSystem.Migrations
 
             migrationBuilder.DropTable(
                 name: "RoleClaims");
+
+            migrationBuilder.DropTable(
+                name: "Salaries");
 
             migrationBuilder.DropTable(
                 name: "Scores");

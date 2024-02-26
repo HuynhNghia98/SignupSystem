@@ -23,6 +23,7 @@ namespace SignupSystem.DataAccess.Data
 		public DbSet<Score> Scores { get; set; }
 		public DbSet<ScoreType> ScoreTypes { get; set; }
 		public DbSet<Vacation> Vacations { get; set; }
+		public DbSet<Salary> Salaries { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

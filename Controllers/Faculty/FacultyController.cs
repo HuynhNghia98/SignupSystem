@@ -28,7 +28,7 @@ namespace SignupSystem.Controllers.Faculty
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -44,7 +44,7 @@ namespace SignupSystem.Controllers.Faculty
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -60,7 +60,7 @@ namespace SignupSystem.Controllers.Faculty
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -76,7 +76,7 @@ namespace SignupSystem.Controllers.Faculty
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -92,7 +92,7 @@ namespace SignupSystem.Controllers.Faculty
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -108,7 +108,7 @@ namespace SignupSystem.Controllers.Faculty
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}

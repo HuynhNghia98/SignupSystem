@@ -16,8 +16,9 @@ namespace SignupSystem.Models
 		[Required]
 		public int Gender { get; set; }
 		[Required]
-		public string? Email { get; set; } = string.Empty;
-		public string? PhoneNumber { get; set; } = string.Empty;
+		public string Email { get; set; } = string.Empty;
+		[Required]
+		public string PhoneNumber { get; set; } = string.Empty;
 		public string? TaxCode { get; set; } = string.Empty;
 		public bool? IsStudent { get; set; } = false;
 		public bool? IsLecturer { get; set; } = false;
@@ -32,5 +33,6 @@ namespace SignupSystem.Models
 		public ICollection<AssignClassTeach>? AssignClassTeaches { get; set; }
 		public ICollection<SubjectTeach>? SubjectTeaches { get; set; }
 		public ICollection<Score>? Scores { get; set; }
+		public ICollection<Salary>? Salaries { get; set; }
 	}
 }

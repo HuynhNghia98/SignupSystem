@@ -28,7 +28,7 @@ namespace SignupSystem.Controllers.TrainingCourse
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -44,7 +44,7 @@ namespace SignupSystem.Controllers.TrainingCourse
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -60,7 +60,7 @@ namespace SignupSystem.Controllers.TrainingCourse
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -76,7 +76,7 @@ namespace SignupSystem.Controllers.TrainingCourse
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -92,7 +92,7 @@ namespace SignupSystem.Controllers.TrainingCourse
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
 			}
 
 		}
@@ -108,7 +108,23 @@ namespace SignupSystem.Controllers.TrainingCourse
 			}
 			else
 			{
-				return BadRequest();
+				return BadRequest(result);
+			}
+
+		}
+
+		[HttpPost("CopyTrainingCourse")]
+		public IActionResult CopyTrainingCourse([FromForm] CopyTraningCourseRequestDTO model)
+		{
+			var result = _trainingCourse.CopyTrainingCourseAsync(model);
+
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return BadRequest(result);
 			}
 
 		}

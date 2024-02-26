@@ -12,6 +12,6 @@ namespace SignupSystem.Services.TrainningCourse.Interfaces
 		ApiResponse<object> AddTrainingCourseAsync(AddOrUpdateTrainingCourseRequestDTO model);
 		Task<ApiResponse<object>> UpdateTrainingCourseAsync(int id, AddOrUpdateTrainingCourseRequestDTO model);
 		Task<ApiResponse<object>> DeleteTrainingCourseAsync(int id);
-		Task<ApiResponse<object>> CopyTrainingCourseAsync(int id);
+		ApiResponse<object> CopyTrainingCourseAsync(CopyTraningCourseRequestDTO model);
 	}
 }
