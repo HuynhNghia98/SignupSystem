@@ -191,7 +191,7 @@ namespace SignupSystem.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("IsAdmin")
+                    b.Property<bool?>("IsEmployee")
                         .HasColumnType("bit");
 
                     b.Property<bool?>("IsLecturer")

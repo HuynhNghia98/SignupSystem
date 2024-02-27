@@ -22,7 +22,7 @@ namespace SignupSystem.Models
 		public string? TaxCode { get; set; } = string.Empty;
 		public bool? IsStudent { get; set; } = false;
 		public bool? IsLecturer { get; set; } = false;
-		public bool? IsAdmin { get; set; } = false;
+		public bool? IsEmployee { get; set; } = false;
 		public string? ImageUrl { get; set; }
 		public string? Parents { get; set; }
 		public string? Address { get; set; }

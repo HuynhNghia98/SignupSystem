@@ -12,7 +12,7 @@ using SignupSystem.DataAccess.Data;
 namespace SignupSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240226051312_AddAllTables")]
+    [Migration("20240227031332_AddAllTables")]
     partial class AddAllTables
     {
         /// <inheritdoc />
@@ -194,7 +194,7 @@ namespace SignupSystem.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("IsAdmin")
+                    b.Property<bool?>("IsEmployee")
                         .HasColumnType("bit");
 
                     b.Property<bool?>("IsLecturer")

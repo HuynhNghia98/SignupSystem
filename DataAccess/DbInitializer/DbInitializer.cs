@@ -38,6 +38,9 @@ namespace SignupSystem.DataAccess.DbInitializer
 			if (!_roleManager.RoleExistsAsync(SD.Role_Admin).GetAwaiter().GetResult())
 			{
 				_roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
+				_roleManager.CreateAsync(new IdentityRole(SD.Role_Accountant)).GetAwaiter().GetResult();
+				_roleManager.CreateAsync(new IdentityRole(SD.Role_RegistrationDepartment)).GetAwaiter().GetResult();
+				_roleManager.CreateAsync(new IdentityRole(SD.Role_BoardOfManager)).GetAwaiter().GetResult();
 				_roleManager.CreateAsync(new IdentityRole(SD.Role_Lecturer)).GetAwaiter().GetResult();
 				_roleManager.CreateAsync(new IdentityRole(SD.Role_Student)).GetAwaiter().GetResult();
 
@@ -52,7 +55,7 @@ namespace SignupSystem.DataAccess.DbInitializer
 					PhoneNumber = "0123456789",
 					Address = "HCM",
 					Gender = 0,
-					IsAdmin = true,
+					IsEmployee = true,
 					DOB = new DateTime(1998, 12, 4)
 				};
 

@@ -113,7 +113,7 @@ namespace SignupSystem.Migrations
                     TaxCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsStudent = table.Column<bool>(type: "bit", nullable: true),
                     IsLecturer = table.Column<bool>(type: "bit", nullable: true),
-                    IsAdmin = table.Column<bool>(type: "bit", nullable: true),
+                    IsEmployee = table.Column<bool>(type: "bit", nullable: true),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Parents = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
