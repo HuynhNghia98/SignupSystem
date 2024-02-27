@@ -12,7 +12,7 @@ using SignupSystem.DataAccess.Data;
 
 namespace SignupSystem.Services.Class
 {
-	public class ClassService : ControllerBase, IClassService
+	public class ClassService : IClassService
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IWebHostEnvironment _webHost;
@@ -62,42 +62,37 @@ namespace SignupSystem.Services.Class
 		}
 		public ApiResponse<object> AddClassAsync(AddOrUpdateClassRequestDTO model)
 		{
-			if (ModelState.IsValid)
+			Models.Class newClass = new()
 			{
-				Models.Class newClass = new()
-				{
-					TrainingCourseId = model.TrainingCourseId,
-					FacultyId = model.FacultyId,
-					ClassCode = model.ClassCode,
-					Name = model.ClassName,
-					Fee = model.Fee,
-					StudentQuantity = model.StudentQuantity,
-					Detail = model.Detail,
-					OpenStatus = model.OpenStatus,
-				};
+				TrainingCourseId = model.TrainingCourseId,
+				FacultyId = model.FacultyId,
+				ClassCode = model.ClassCode,
+				Name = model.ClassName,
+				Fee = model.Fee,
+				StudentQuantity = model.StudentQuantity,
+				Detail = model.Detail,
+				OpenStatus = model.OpenStatus,
+			};
 
-				//add image
-				if (model.File != null && model.File.Length > 0)
+			//add image
+			if (model.File != null && model.File.Length > 0)
+			{
+				//root path
+				string wwwRootPath = _webHost.WebRootPath;
+				string classImagePath = Path.Combine(wwwRootPath, @"images/class");
+				string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
+				using (var fileStream = new FileStream(Path.Combine(classImagePath, fileName), FileMode.Create))
 				{
-					//root path
-					string wwwRootPath = _webHost.WebRootPath;
-					string classImagePath = Path.Combine(wwwRootPath, @"images/class");
-					string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
-					using (var fileStream = new FileStream(Path.Combine(classImagePath, fileName), FileMode.Create))
-					{
-						model.File.CopyTo(fileStream);
-					}
-
-					newClass.ImageUrl = @"\images\class\" + fileName;
+					model.File.CopyTo(fileStream);
 				}
 
-				_unitOfWork.Class.Add(newClass);
-				_unitOfWork.Save();
-
-				_res.Messages = "Thêm lớp học thành công";
-				return _res;
+				newClass.ImageUrl = @"\images\class\" + fileName;
 			}
-			_res.IsSuccess = false;
+
+			_unitOfWork.Class.Add(newClass);
+			_unitOfWork.Save();
+
+			_res.Messages = "Thêm lớp học thành công";
 			return _res;
 		}
 		public async Task<ApiResponse<object>> UpdateClassAsync(int classId, AddOrUpdateClassRequestDTO model)
@@ -108,59 +103,54 @@ namespace SignupSystem.Services.Class
 				return _res;
 			}
 
-			if (ModelState.IsValid)
+			var classInDb = await _unitOfWork.Class.Get(x => x.Id == classId, true).FirstOrDefaultAsync();
+
+			if (classInDb == null)
 			{
-				var classInDb = await _unitOfWork.Class.Get(x => x.Id == classId, true).FirstOrDefaultAsync();
-
-				if (classInDb == null)
-				{
-					_res.IsSuccess = false;
-					return _res;
-				}
-
-				classInDb.TrainingCourseId = model.TrainingCourseId;
-				classInDb.FacultyId = model.FacultyId;
-				classInDb.ClassCode = model.ClassCode;
-				classInDb.Name = model.ClassName;
-				classInDb.Fee = model.Fee;
-				classInDb.StudentQuantity = model.StudentQuantity;
-				classInDb.Detail = model.Detail;
-				classInDb.OpenStatus = model.OpenStatus;
-
-				//update image
-				if (model.File != null && model.File.Length > 0)
-				{
-					//root path
-					string wwwRootPath = _webHost.WebRootPath;
-					string classImagePath = Path.Combine(wwwRootPath, @"images/class");
-
-					//remove image
-					if (!string.IsNullOrEmpty(classInDb.ImageUrl))
-					{
-						string imagePath = Path.Combine(wwwRootPath, classInDb.ImageUrl.TrimStart('\\'));
-
-						if (System.IO.File.Exists(imagePath))
-						{
-							System.IO.File.Delete(imagePath);
-						}
-					}
-
-					string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
-					using (var fileStream = new FileStream(Path.Combine(classImagePath, fileName), FileMode.Create))
-					{
-						model.File.CopyTo(fileStream);
-					}
-
-					classInDb.ImageUrl = @"\images\class\" + fileName;
-				}
-
-				_unitOfWork.Class.Update(classInDb);
-				_unitOfWork.Save();
-
-				_res.Messages = "Đã cập nhật lớp thành công";
+				_res.IsSuccess = false;
 				return _res;
 			}
-			_res.IsSuccess = false;
+
+			classInDb.TrainingCourseId = model.TrainingCourseId;
+			classInDb.FacultyId = model.FacultyId;
+			classInDb.ClassCode = model.ClassCode;
+			classInDb.Name = model.ClassName;
+			classInDb.Fee = model.Fee;
+			classInDb.StudentQuantity = model.StudentQuantity;
+			classInDb.Detail = model.Detail;
+			classInDb.OpenStatus = model.OpenStatus;
+
+			//update image
+			if (model.File != null && model.File.Length > 0)
+			{
+				//root path
+				string wwwRootPath = _webHost.WebRootPath;
+				string classImagePath = Path.Combine(wwwRootPath, @"images/class");
+
+				//remove image
+				if (!string.IsNullOrEmpty(classInDb.ImageUrl))
+				{
+					string imagePath = Path.Combine(wwwRootPath, classInDb.ImageUrl.TrimStart('\\'));
+
+					if (System.IO.File.Exists(imagePath))
+					{
+						System.IO.File.Delete(imagePath);
+					}
+				}
+
+				string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
+				using (var fileStream = new FileStream(Path.Combine(classImagePath, fileName), FileMode.Create))
+				{
+					model.File.CopyTo(fileStream);
+				}
+
+				classInDb.ImageUrl = @"\images\class\" + fileName;
+			}
+
+			_unitOfWork.Class.Update(classInDb);
+			_unitOfWork.Save();
+
+			_res.Messages = "Đã cập nhật lớp thành công";
 			return _res;
 		}
 		public async Task<ApiResponse<object>> DeleteClassAsync(int classId)

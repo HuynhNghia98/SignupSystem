@@ -109,7 +109,7 @@ namespace SignupSystem.Controllers.Lecturer
 		[HttpPost("GetAndSearchTeachingAssignmen")]
 		public async Task<IActionResult> GetAndSearchTeachingAssignmen([FromForm] string? search, [FromForm] int classId)
 		{
-			var result = await _lecturerService.GetAndSearchTeachingAssignmentAsync(search,classId);
+			var result = await _lecturerService.GetAndSearchTeachingAssignmentAsync(search, classId);
 
 			if (result.IsSuccess)
 			{

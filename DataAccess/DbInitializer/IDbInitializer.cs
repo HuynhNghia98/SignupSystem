@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace SignupSystem.DataAccess.DbInitializer
 {
     public interface IDbInitializer
     {
-        void Initializer();
-    }
+		void Initializer();
+		Task CreateRoleWithClaims(string roleName, List<string> claims);
+		Task AddClaimToRole(IdentityRole role, string claimType, string claimValue);
+
+	}
 }

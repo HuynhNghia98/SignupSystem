@@ -56,21 +56,16 @@ namespace SignupSystem.Services.TrainningCourse
 		}
 		public ApiResponse<object> AddTrainingCourseAsync(AddOrUpdateTrainingCourseRequestDTO model)
 		{
-			if (ModelState.IsValid)
+			Models.TrainingCourse newTrainingCourse = new()
 			{
-				Models.TrainingCourse newTrainingCourse = new()
-				{
-					TrainingCourseCode = model.TrainingCourseCode,
-					Name = model.TrainingCourseName,
-				};
+				TrainingCourseCode = model.TrainingCourseCode,
+				Name = model.TrainingCourseName,
+			};
 
-				_unitOfWork.TrainingCourse.Add(newTrainingCourse);
-				_unitOfWork.Save();
+			_unitOfWork.TrainingCourse.Add(newTrainingCourse);
+			_unitOfWork.Save();
 
-				_res.Messages = "Thêm khóa thành công";
-				return _res;
-			}
-			_res.IsSuccess = false;
+			_res.Messages = "Thêm khóa thành công";
 			return _res;
 		}
 		public async Task<ApiResponse<object>> UpdateTrainingCourseAsync(int id, AddOrUpdateTrainingCourseRequestDTO model)
@@ -81,26 +76,21 @@ namespace SignupSystem.Services.TrainningCourse
 				return _res;
 			}
 
-			if (ModelState.IsValid)
+			var trainingCourseInDb = await _unitOfWork.TrainingCourse.Get(x => x.Id == id, true).FirstOrDefaultAsync();
+
+			if (trainingCourseInDb == null)
 			{
-				var trainingCourseInDb = await _unitOfWork.TrainingCourse.Get(x => x.Id == id, true).FirstOrDefaultAsync();
-
-				if (trainingCourseInDb == null)
-				{
-					_res.IsSuccess = false;
-					return _res;
-				}
-
-				trainingCourseInDb.TrainingCourseCode = model.TrainingCourseCode;
-				trainingCourseInDb.Name = model.TrainingCourseName;
-
-				_unitOfWork.TrainingCourse.Update(trainingCourseInDb);
-				_unitOfWork.Save();
-
-				_res.Messages = "Đã cập nhật khóa thành công";
+				_res.IsSuccess = false;
 				return _res;
 			}
-			_res.IsSuccess = false;
+
+			trainingCourseInDb.TrainingCourseCode = model.TrainingCourseCode;
+			trainingCourseInDb.Name = model.TrainingCourseName;
+
+			_unitOfWork.TrainingCourse.Update(trainingCourseInDb);
+			_unitOfWork.Save();
+
+			_res.Messages = "Đã cập nhật khóa thành công";
 			return _res;
 		}
 		public async Task<ApiResponse<object>> DeleteTrainingCourseAsync(int id)
@@ -127,23 +117,18 @@ namespace SignupSystem.Services.TrainningCourse
 		}
 		public ApiResponse<object> CopyTrainingCourseAsync(CopyTraningCourseRequestDTO model)
 		{
-			if (ModelState.IsValid)
+			Models.TrainingCourse newTrainingCourse = new()
 			{
-				Models.TrainingCourse newTrainingCourse = new()
-				{
-					TrainingCourseCode = model.TrainingCourseCode,
-					Name = model.TrainingCourseName,
-					StartDate = model.StartDay,
-					EndDate = model.EndDay,
-				};
+				TrainingCourseCode = model.TrainingCourseCode,
+				Name = model.TrainingCourseName,
+				StartDate = model.StartDay,
+				EndDate = model.EndDay,
+			};
 
-				_unitOfWork.TrainingCourse.Add(newTrainingCourse);
-				_unitOfWork.Save();
+			_unitOfWork.TrainingCourse.Add(newTrainingCourse);
+			_unitOfWork.Save();
 
-				_res.Messages = "Đã sao chép khóa thành công";
-				return _res;
-			}
-			_res.IsSuccess = false;
+			_res.Messages = "Đã sao chép khóa thành công";
 			return _res;
 		}
 	}

@@ -28,6 +28,10 @@ namespace SignupSystem.Models
 		public string? Address { get; set; }
 		[Required]
 		public DateTime DOB { get; set; }
+
+		[NotMapped]
+		public string Role { get; set; } = string.Empty;
+
 		public string? SubjectTeaching { get; set; } = string.Empty;
 		public ICollection<RegisterClass>? RegisterClasses { get; set; }
 		public ICollection<AssignClassTeach>? AssignClassTeaches { get; set; }

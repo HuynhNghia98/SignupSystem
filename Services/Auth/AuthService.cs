@@ -17,7 +17,7 @@ using SignupSystem.Utilities;
 
 namespace SignupSystem.Services.Auth
 {
-    public class AuthService : ControllerBase, IAuthService
+    public class AuthService : IAuthService
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly ApplicationDbContext _db;
@@ -48,10 +48,10 @@ namespace SignupSystem.Services.Auth
 			{
 				_res.IsSuccess = false;
 				_res.StatusCode = HttpStatusCode.NotFound;
-
-				ModelStateHelper.AddModelError<LoginRequestDTO>(ModelState, nameof(LoginRequestDTO.Username), "Email không tồn tại.");
-				_res.Errors = ModelStateHelper.ConvertToDictionary(ModelState);
-
+				_res.Errors = new Dictionary<string, List<string>>
+						{
+							{ nameof(LoginRequestDTO.Username), new List<string> { $"Email không tồn tại." }}
+						};
 				return _res;
 			}
 
@@ -61,10 +61,10 @@ namespace SignupSystem.Services.Auth
 			{
 				_res.IsSuccess = false;
 				_res.StatusCode = HttpStatusCode.BadRequest;
-
-				ModelStateHelper.AddModelError<LoginRequestDTO>(ModelState, nameof(LoginRequestDTO.Password), "Sai mật khẩu.");
-				_res.Errors = ModelStateHelper.ConvertToDictionary(ModelState);
-
+				_res.Errors = new Dictionary<string, List<string>>
+						{
+							{ nameof(LoginRequestDTO.Password), new List<string> { $"Sai mật khẩu." }}
+						};
 				_res.Result = new LoginRequestDTO();
 				return _res;
 			}
@@ -80,10 +80,10 @@ namespace SignupSystem.Services.Auth
 			{
 				_res.IsSuccess = false;
 				_res.StatusCode = HttpStatusCode.BadRequest;
-
-				ModelStateHelper.AddModelError<LoginRequestDTO>(ModelState, nameof(LoginRequestDTO.Username), "Không thể đăng nhập.");
-				_res.Errors = ModelStateHelper.ConvertToDictionary(ModelState);
-
+				_res.Errors = new Dictionary<string, List<string>>
+						{
+							{ nameof(LoginRequestDTO.Username), new List<string> { $"Không thể đăng nhập." }}
+						};
 				_res.Result = new LoginRequestDTO();
 				return _res;
 			}

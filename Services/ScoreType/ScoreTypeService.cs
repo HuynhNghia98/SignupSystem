@@ -8,7 +8,7 @@ using SignupSystem.Services.ScoreType.Interface;
 
 namespace SignupSystem.Services.ScoreType
 {
-	public class ScoreTypeService : ControllerBase, IScoreTypeService
+	public class ScoreTypeService : IScoreTypeService
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private ApiResponse<object> _res;
@@ -43,24 +43,19 @@ namespace SignupSystem.Services.ScoreType
 			}
 			return res;
 		}
-	
+
 		public ApiResponse<object> AddScoreTypeAsync(AddOrUpdateScoreTypeRequestDTO model)
 		{
-			if (ModelState.IsValid)
+			Models.ScoreType newScoreType = new()
 			{
-				Models.ScoreType newScoreType = new()
-				{
-					NameType = model.ScoreTypeName,
-					Coefficient = model.Coefficient,
-				};
+				NameType = model.ScoreTypeName,
+				Coefficient = model.Coefficient,
+			};
 
-				_unitOfWork.ScoreType.Add(newScoreType);
-				_unitOfWork.Save();
+			_unitOfWork.ScoreType.Add(newScoreType);
+			_unitOfWork.Save();
 
-				_res.Messages = "Thêm loại điểm thành công";
-				return _res;
-			}
-			_res.IsSuccess = false;
+			_res.Messages = "Thêm loại điểm thành công";
 			return _res;
 		}
 
@@ -72,29 +67,25 @@ namespace SignupSystem.Services.ScoreType
 				return _res;
 			}
 
-			if (ModelState.IsValid)
+			var scoreTypeInDb = await _unitOfWork.ScoreType.Get(x => x.Id == scoreTypeId, true).FirstOrDefaultAsync();
+
+			if (scoreTypeInDb == null)
 			{
-				var scoreTypeInDb = await _unitOfWork.ScoreType.Get(x => x.Id == scoreTypeId, true).FirstOrDefaultAsync();
-
-				if (scoreTypeInDb == null)
-				{
-					_res.IsSuccess = false;
-					return _res;
-				}
-
-				scoreTypeInDb.NameType = model.ScoreTypeName;
-				scoreTypeInDb.Coefficient = model.Coefficient;
-
-				_unitOfWork.ScoreType.Update(scoreTypeInDb);
-				_unitOfWork.Save();
-
-				_res.Messages = "Đã cập nhật loại điểm thành công";
+				_res.IsSuccess = false;
 				return _res;
 			}
-			_res.IsSuccess = false;
+
+			scoreTypeInDb.NameType = model.ScoreTypeName;
+			scoreTypeInDb.Coefficient = model.Coefficient;
+
+			_unitOfWork.ScoreType.Update(scoreTypeInDb);
+			_unitOfWork.Save();
+
+			_res.Messages = "Đã cập nhật loại điểm thành công";
 			return _res;
+
 		}
-	
+
 		public async Task<ApiResponse<object>> DeleteScoreTypeAsync(int scoreTypeId)
 		{
 			if (scoreTypeId == 0)

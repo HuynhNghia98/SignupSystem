@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SignupSystem.DataAccess.Repository.IRepository;
 using SignupSystem.Models;
+using SignupSystem.Models.DTO.Auth;
 using SignupSystem.Models.DTO.Subject;
 using SignupSystem.Models.DTO.Vacation;
 using SignupSystem.Models.Response;
@@ -57,23 +58,18 @@ namespace SignupSystem.Services.Vacation
 		}
 		public ApiResponse<object> AddVacationAsync(AddOrUpdateVacationRequestDTO model)
 		{
-			if (ModelState.IsValid)
+			Models.Vacation newVacation = new()
 			{
-				Models.Vacation newVacation = new()
-				{
-					VacationName = model.VacationName,
-					Reason = model.Reason,
-					StartDay = model.StartDay,
-					EndDay = model.EndDay
-				};
+				VacationName = model.VacationName,
+				Reason = model.Reason,
+				StartDay = model.StartDay,
+				EndDay = model.EndDay
+			};
 
-				_unitOfWork.Vacation.Add(newVacation);
-				_unitOfWork.SaveAsync();
+			_unitOfWork.Vacation.Add(newVacation);
+			_unitOfWork.SaveAsync();
 
-				_res.Messages = "Thêm kỳ nghỉ thành công";
-				return _res;
-			}
-			_res.IsSuccess = false;
+			_res.Messages = "Thêm kỳ nghỉ thành công";
 			return _res;
 		}
 		public async Task<ApiResponse<object>> UpdateVacationAsync(int vacationId, AddOrUpdateVacationRequestDTO model)
@@ -84,28 +80,27 @@ namespace SignupSystem.Services.Vacation
 				return _res;
 			}
 
-			if (ModelState.IsValid)
+			var vacationInDb = await _unitOfWork.Vacation.Get(x => x.Id == vacationId, true).FirstOrDefaultAsync();
+
+			if (vacationInDb == null)
 			{
-				var vacationInDb = await _unitOfWork.Vacation.Get(x => x.Id == vacationId, true).FirstOrDefaultAsync();
-
-				if (vacationInDb == null)
+				_res.IsSuccess = false;
+				_res.Errors = new Dictionary<string, List<string>>
 				{
-					_res.IsSuccess = false;
-					return _res;
-				}
-
-				vacationInDb.VacationName = model.VacationName;
-				vacationInDb.Reason = model.Reason;
-				vacationInDb.StartDay = model.StartDay;
-				vacationInDb.EndDay = model.EndDay;
-
-				_unitOfWork.Vacation.Update(vacationInDb);
-				_unitOfWork.Save();
-
-				_res.Messages = "Đã cập nhật kỳ nghỉ thành công";
+					{ "vacationId", new List<string> { $"Không thể tìm thấy kỳ nghỉ." }}
+				};
 				return _res;
 			}
-			_res.IsSuccess = false;
+
+			vacationInDb.VacationName = model.VacationName;
+			vacationInDb.Reason = model.Reason;
+			vacationInDb.StartDay = model.StartDay;
+			vacationInDb.EndDay = model.EndDay;
+
+			_unitOfWork.Vacation.Update(vacationInDb);
+			_unitOfWork.Save();
+
+			_res.Messages = "Đã cập nhật kỳ nghỉ thành công";
 			return _res;
 		}
 		public async Task<ApiResponse<object>> DeleteVacationAsync(int vacationId)

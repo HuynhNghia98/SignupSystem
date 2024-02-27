@@ -1,15 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SignupSystem.DataAccess.Repository.IRepository;
-using SignupSystem.Models;
-using SignupSystem.Models.DTO.Department;
 using SignupSystem.Models.DTO.Faculty;
 using SignupSystem.Models.Response;
 using SignupSystem.Services.Faculty.Interfaces;
 
 namespace SignupSystem.Services.Faculty
 {
-	public class FacultyService : ControllerBase, IFacultyService
+	public class FacultyService : IFacultyService
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private ApiResponse<object> _res;
@@ -60,21 +57,16 @@ namespace SignupSystem.Services.Faculty
 
 		public ApiResponse<object> AddFacultyAsync(AddOrUpdateFacultyRequestDTO model)
 		{
-			if (ModelState.IsValid)
+			Models.Faculty newFaculty = new()
 			{
-				Models.Faculty newFaculty = new()
-				{
-					FacultyCode = model.FacultyCode,
-					Name = model.FacultyName,
-				};
+				FacultyCode = model.FacultyCode,
+				Name = model.FacultyName,
+			};
 
-				_unitOfWork.Faculty.Add(newFaculty);
-				_unitOfWork.Save();
+			_unitOfWork.Faculty.Add(newFaculty);
+			_unitOfWork.Save();
 
-				_res.Messages = "Thêm khoa thành công";
-				return _res;
-			}
-			_res.IsSuccess = false;
+			_res.Messages = "Thêm khoa thành công";
 			return _res;
 		}
 		public async Task<ApiResponse<object>> UpdateFacultyAsync(int facultyId, AddOrUpdateFacultyRequestDTO model)
@@ -85,26 +77,25 @@ namespace SignupSystem.Services.Faculty
 				return _res;
 			}
 
-			if (ModelState.IsValid)
+			var facultyInDb = await _unitOfWork.Faculty.Get(x => x.Id == facultyId, true).FirstOrDefaultAsync();
+
+			if (facultyInDb == null)
 			{
-				var facultyInDb = await _unitOfWork.Faculty.Get(x => x.Id == facultyId, true).FirstOrDefaultAsync();
-
-				if (facultyInDb == null)
+				_res.Errors = new Dictionary<string, List<string>>
 				{
-					_res.IsSuccess = false;
-					return _res;
-				}
-
-				facultyInDb.FacultyCode = model.FacultyCode;
-				facultyInDb.Name = model.FacultyName;
-
-				_unitOfWork.Faculty.Update(facultyInDb);
-				_unitOfWork.Save();
-
-				_res.Messages = "Đã cập nhật khoa thành công";
+					{ nameof(AddOrUpdateFacultyRequestDTO.FacultyName), new List<string> { $"Không tim thấy khoa." }}
+				};
+				_res.IsSuccess = false;
 				return _res;
 			}
-			_res.IsSuccess = false;
+
+			facultyInDb.FacultyCode = model.FacultyCode;
+			facultyInDb.Name = model.FacultyName;
+
+			_unitOfWork.Faculty.Update(facultyInDb);
+			_unitOfWork.Save();
+
+			_res.Messages = "Đã cập nhật khoa thành công";
 			return _res;
 		}
 

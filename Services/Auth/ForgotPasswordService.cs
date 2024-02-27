@@ -36,8 +36,10 @@ namespace SignupSystem.Services.Auth
 
 				if (user == null)
 				{
-					ModelStateHelper.AddModelError<ForgotPasswordRequestDTO>(ModelState, nameof(ForgotPasswordRequestDTO.Email), "Email không tồn tại.");
-					_res.Errors = ModelStateHelper.ConvertToDictionary(ModelState);
+					_res.Errors = new Dictionary<string, List<string>>
+						{
+							{ nameof(ForgotPasswordRequestDTO.Email), new List<string> { $"Email không tồn tại." }}
+						};
 					_res.IsSuccess = false;
 					return _res;
 				}
@@ -70,8 +72,10 @@ namespace SignupSystem.Services.Auth
 
 				if (user == null)
 				{
-					ModelStateHelper.AddModelError<ChangePasswordRequestDTO>(ModelState, nameof(ChangePasswordRequestDTO.UserId), "Không tìm thấy người dùng");
-					_res.Errors = ModelStateHelper.ConvertToDictionary(ModelState);
+					_res.Errors = new Dictionary<string, List<string>>
+						{
+							{ nameof(ForgotPasswordRequestDTO.Email), new List<string> { $"Không tìm thấy người dùng." }}
+						};
 					_res.IsSuccess = false;
 					return _res;
 				}

@@ -9,7 +9,7 @@ using SignupSystem.Services.Department.Interfaces;
 
 namespace SignupSystem.Services.Department
 {
-	public class DepartmentService: ControllerBase, IDepartmentService
+	public class DepartmentService : IDepartmentService
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private ApiResponse<object> _res;
@@ -60,20 +60,15 @@ namespace SignupSystem.Services.Department
 
 		public ApiResponse<object> AddDepartmentAsync(AddOrUpdateDepartmentRequestDTO model)
 		{
-			if (ModelState.IsValid)
+			Models.Department newDepartment = new()
 			{
-				Models.Department newDepartment = new()
-				{
-					Name = model.DepartmentName,
-				};
+				Name = model.DepartmentName,
+			};
 
-				_unitOfWork.Department.Add(newDepartment);
-				_unitOfWork.Save();
+			_unitOfWork.Department.Add(newDepartment);
+			_unitOfWork.Save();
 
-				_res.Messages = "Thêm tổ bộ môn thành công";
-				return _res;
-			}
-			_res.IsSuccess = false;
+			_res.Messages = "Thêm tổ bộ môn thành công";
 			return _res;
 		}
 
@@ -85,27 +80,23 @@ namespace SignupSystem.Services.Department
 				return _res;
 			}
 
-			if (ModelState.IsValid)
+			var departmentInDb = await _unitOfWork.Department.Get(x => x.Id == departmentId, true).FirstOrDefaultAsync();
+
+			if (departmentInDb == null)
 			{
-				var departmentInDb = await _unitOfWork.Department.Get(x => x.Id == departmentId, true).FirstOrDefaultAsync();
-
-				if (departmentInDb == null)
-				{
-					_res.IsSuccess = false;
-					return _res;
-				}
-
-				departmentInDb.Name = model.DepartmentName;
-
-				_unitOfWork.Department.Update(departmentInDb);
-				_unitOfWork.Save();
-
-				_res.Messages = "Đã cập nhật tổ bộ môn thành công";
+				_res.IsSuccess = false;
 				return _res;
 			}
-			_res.IsSuccess = false;
+
+			departmentInDb.Name = model.DepartmentName;
+
+			_unitOfWork.Department.Update(departmentInDb);
+			_unitOfWork.Save();
+
+			_res.Messages = "Đã cập nhật tổ bộ môn thành công";
 			return _res;
 		}
+
 		public async Task<ApiResponse<object>> DeleteDepartmentAsync(int departmentId)
 		{
 			if (departmentId == 0)

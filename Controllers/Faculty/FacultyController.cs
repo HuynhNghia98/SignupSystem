@@ -78,7 +78,6 @@ namespace SignupSystem.Controllers.Faculty
 			{
 				return BadRequest(result);
 			}
-
 		}
 
 		[HttpPut("UpdateFaculty/{id}")]
@@ -94,7 +93,6 @@ namespace SignupSystem.Controllers.Faculty
 			{
 				return BadRequest(result);
 			}
-
 		}
 
 		[HttpDelete("DeleteFaculty/{id}")]

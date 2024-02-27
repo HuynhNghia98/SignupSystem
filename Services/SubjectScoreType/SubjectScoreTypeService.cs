@@ -57,24 +57,19 @@ namespace SignupSystem.Services.SubjectScoreType
 		}
 		public ApiResponse<object> AddSubjectScoreTypeAsync(AddOrUpdateSubjectScoreTypeRequestDTO model)
 		{
-			if (ModelState.IsValid)
+			Models.SubjectScoreType newSubjectScoreType = new()
 			{
-				Models.SubjectScoreType newSubjectScoreType = new()
-				{
-					TrainingCourseId = model.TraininngCourseId,
-					SubjectId = model.SubjectId,
-					ScoreTypeId = model.ScoreTypeId,
-					ScoreColumn = model.ScoreColumn,
-					MandatoryScoreColumn = model.MandatoryScoreColumn,
-				};
+				TrainingCourseId = model.TraininngCourseId,
+				SubjectId = model.SubjectId,
+				ScoreTypeId = model.ScoreTypeId,
+				ScoreColumn = model.ScoreColumn,
+				MandatoryScoreColumn = model.MandatoryScoreColumn,
+			};
 
-				_unitOfWork.SubjectScoreType.Add(newSubjectScoreType);
-				_unitOfWork.Save();
+			_unitOfWork.SubjectScoreType.Add(newSubjectScoreType);
+			_unitOfWork.Save();
 
-				_res.Messages = "Thêm loại điểm môn thành công";
-				return _res;
-			}
-			_res.IsSuccess = false;
+			_res.Messages = "Thêm loại điểm môn thành công";
 			return _res;
 		}
 		public async Task<ApiResponse<object>> UpdateSubjectScoreTypeAsync(int id, AddOrUpdateSubjectScoreTypeRequestDTO model)
@@ -85,29 +80,24 @@ namespace SignupSystem.Services.SubjectScoreType
 				return _res;
 			}
 
-			if (ModelState.IsValid)
+			var subjectScoreTypeInDb = await _unitOfWork.SubjectScoreType.Get(x => x.Id == id, true).FirstOrDefaultAsync();
+
+			if (subjectScoreTypeInDb == null)
 			{
-				var subjectScoreTypeInDb = await _unitOfWork.SubjectScoreType.Get(x => x.Id == id, true).FirstOrDefaultAsync();
-
-				if (subjectScoreTypeInDb == null)
-				{
-					_res.IsSuccess = false;
-					return _res;
-				}
-
-				subjectScoreTypeInDb.TrainingCourseId = model.TraininngCourseId;
-				subjectScoreTypeInDb.SubjectId = model.SubjectId;
-				subjectScoreTypeInDb.ScoreTypeId = model.ScoreTypeId;
-				subjectScoreTypeInDb.ScoreColumn = model.ScoreColumn;
-				subjectScoreTypeInDb.MandatoryScoreColumn = model.MandatoryScoreColumn;
-
-				_unitOfWork.SubjectScoreType.Update(subjectScoreTypeInDb);
-				_unitOfWork.Save();
-
-				_res.Messages = "Đã cập nhật loại điểm môn thành công";
+				_res.IsSuccess = false;
 				return _res;
 			}
-			_res.IsSuccess = false;
+
+			subjectScoreTypeInDb.TrainingCourseId = model.TraininngCourseId;
+			subjectScoreTypeInDb.SubjectId = model.SubjectId;
+			subjectScoreTypeInDb.ScoreTypeId = model.ScoreTypeId;
+			subjectScoreTypeInDb.ScoreColumn = model.ScoreColumn;
+			subjectScoreTypeInDb.MandatoryScoreColumn = model.MandatoryScoreColumn;
+
+			_unitOfWork.SubjectScoreType.Update(subjectScoreTypeInDb);
+			_unitOfWork.Save();
+
+			_res.Messages = "Đã cập nhật loại điểm môn thành công";
 			return _res;
 		}
 		public async Task<ApiResponse<object>> DeleteSubjectScoreTypeAsync(int id)

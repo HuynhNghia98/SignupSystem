@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SignupSystem.DataAccess.Repository.IRepository;
 using SignupSystem.Models;
 using SignupSystem.Models.DTO.Revenue;
@@ -10,7 +9,7 @@ using SignupSystem.Utilities;
 
 namespace SignupSystem.Services.Revenue
 {
-	public class RevenueService : ControllerBase, IRevenueService
+	public class RevenueService : IRevenueService
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private ApiResponse<object> _res;
@@ -22,48 +21,43 @@ namespace SignupSystem.Services.Revenue
 
 		public async Task<ApiResponse<object>> AddEmployeeSalaryAsync(string lecturerId, AddCalculateEmployeeSalaryRequestDTO model)
 		{
-			if (ModelState.IsValid)
+			if (string.IsNullOrEmpty(lecturerId))
 			{
-				if (string.IsNullOrEmpty(lecturerId))
-				{
-					_res.IsSuccess = false;
-					return _res;
-				}
+				_res.IsSuccess = false;
+				return _res;
+			}
 
-				//kiểm tra xem đã tính lương cho giảng viên trong tháng chưa
-				var salaryInDb = await _unitOfWork.Salary
-					.Get(x => x.SalaryDay.Month == DateTime.Now.Month, true)
-					.FirstOrDefaultAsync();
+			//kiểm tra xem đã tính lương cho giảng viên trong tháng chưa
+			var salaryInDb = await _unitOfWork.Salary
+				.Get(x => x.SalaryDay.Month == DateTime.Now.Month, true)
+				.FirstOrDefaultAsync();
 
-				if (salaryInDb != null)
-				{
-					_res.IsSuccess = false;
-					_res.Errors = new Dictionary<string, List<string>>
+			if (salaryInDb != null)
+			{
+				_res.IsSuccess = false;
+				_res.Errors = new Dictionary<string, List<string>>
 					{
 						{ "error", new List<string> { $"Đã có phiếu lương của giảng viên trong tháng {DateTime.Now.Month}" } }
 					};
-					return _res;
-				}
-
-				//thêm mới
-				Salary newSalary = new()
-				{
-					SalaryOfEmployee = model.Salary,
-					SalaryDay = DateTime.Now,
-					AllowanceName = model.AllowanceName,
-					Allowance = model.Allowance,
-					Notes = model.Notes,
-					ApplicationUserId = lecturerId,
-					TrainingCourseId = model.TrainingCourseId,
-				};
-
-				_unitOfWork.Salary.Add(newSalary);
-				_unitOfWork.Save();
-
-				_res.Messages = "Đã thêm bảng lương thành công";
 				return _res;
 			}
-			_res.IsSuccess = false;
+
+			//thêm mới
+			Salary newSalary = new()
+			{
+				SalaryOfEmployee = model.Salary,
+				SalaryDay = DateTime.Now,
+				AllowanceName = model.AllowanceName,
+				Allowance = model.Allowance,
+				Notes = model.Notes,
+				ApplicationUserId = lecturerId,
+				TrainingCourseId = model.TrainingCourseId,
+			};
+
+			_unitOfWork.Salary.Add(newSalary);
+			_unitOfWork.Save();
+
+			_res.Messages = "Đã thêm bảng lương thành công";
 			return _res;
 		}
 		public async Task<ApiResponse<GetSalaryResponseDTO>> CalculateEmployeeSalaryAsync(CalculateEmployeeSalaryRequestDTO model)

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SignupSystem.Models.DTO.Class;
 using SignupSystem.Services.Class.Interfaces;
 
@@ -85,7 +84,6 @@ namespace SignupSystem.Controllers.Class
 			{
 				return BadRequest(result);
 			}
-
 		}
 
 		[HttpPut("UpdateClass/{id}")]
@@ -101,7 +99,6 @@ namespace SignupSystem.Controllers.Class
 			{
 				return BadRequest(result);
 			}
-
 		}
 
 		[HttpDelete("DeleteClass/{id}")]
@@ -165,7 +162,6 @@ namespace SignupSystem.Controllers.Class
 			{
 				return BadRequest(result);
 			}
-
 		}
 
 		[HttpPost("AddScoreForStudents")]

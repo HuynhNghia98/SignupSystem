@@ -75,7 +75,6 @@ namespace SignupSystem.Controllers.Department
 			{
 				return BadRequest(result);
 			}
-
 		}
 
 		[HttpPut("UpdateDepartment/{id}")]
@@ -91,7 +90,6 @@ namespace SignupSystem.Controllers.Department
 			{
 				return BadRequest(result);
 			}
-
 		}
 
 		[HttpDelete("DeleteDepartment/{id}")]

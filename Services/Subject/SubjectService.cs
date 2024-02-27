@@ -18,7 +18,7 @@ namespace SignupSystem.Services.Subject
 		}
 		public async Task<ApiResponse<GetSubjectsResponseDTO>> GetSubjectsAsync()
 		{
-			var subjects = await _unitOfWork.Subject.GetAll().Include(x=>x.Faculty).Include(x => x.Department).ToListAsync();
+			var subjects = await _unitOfWork.Subject.GetAll().Include(x => x.Faculty).Include(x => x.Department).ToListAsync();
 
 			ApiResponse<GetSubjectsResponseDTO> res = new();
 			res.Result.Subjects = subjects;
@@ -46,7 +46,7 @@ namespace SignupSystem.Services.Subject
 			var subjectsInDb = await _unitOfWork.Subject.Get(x => x.SubjectCode.Contains(search) ||
 																				x.Name.Contains(search)
 																				, true)
-																			.Include(x=>x.Faculty).Include(x => x.Department).ToListAsync();
+																			.Include(x => x.Faculty).Include(x => x.Department).ToListAsync();
 
 			ApiResponse<GetSubjectsResponseDTO> res = new();
 			res.Result.Subjects = subjectsInDb;
@@ -55,23 +55,18 @@ namespace SignupSystem.Services.Subject
 		}
 		public ApiResponse<object> AddSubjectAsync(AddOrUpdateSubjectRequestDTO model)
 		{
-			if (ModelState.IsValid)
+			Models.Subject newSubject = new()
 			{
-				Models.Subject newSubject = new()
-				{
-					Name = model.ClassName,
-					Details = model.Detail,
-					FacultyId = model.FacultyId,
-					DepartmentId = model.DepartmentId,
-				};
-				
-				_unitOfWork.Subject.Add(newSubject);
-				_unitOfWork.Save();
+				Name = model.ClassName,
+				Details = model.Detail,
+				FacultyId = model.FacultyId,
+				DepartmentId = model.DepartmentId,
+			};
 
-				_res.Messages = "Thêm môn học thành công";
-				return _res;
-			}
-			_res.IsSuccess = false;
+			_unitOfWork.Subject.Add(newSubject);
+			_unitOfWork.Save();
+
+			_res.Messages = "Thêm môn học thành công";
 			return _res;
 		}
 		public async Task<ApiResponse<object>> UpdateSubjectAsync(int subjectId, AddOrUpdateSubjectRequestDTO model)
@@ -82,28 +77,23 @@ namespace SignupSystem.Services.Subject
 				return _res;
 			}
 
-			if (ModelState.IsValid)
+			var subjectInDb = await _unitOfWork.Subject.Get(x => x.Id == subjectId, true).FirstOrDefaultAsync();
+
+			if (subjectInDb == null)
 			{
-				var subjectInDb = await _unitOfWork.Subject.Get(x => x.Id == subjectId, true).FirstOrDefaultAsync();
-
-				if (subjectInDb == null)
-				{
-					_res.IsSuccess = false;
-					return _res;
-				}
-
-				subjectInDb.Name = model.ClassName;
-				subjectInDb.Details = model.Detail;
-				subjectInDb.FacultyId = model.FacultyId;
-				subjectInDb.DepartmentId = model.DepartmentId;
-
-				_unitOfWork.Subject.Update(subjectInDb);
-				_unitOfWork.Save();
-
-				_res.Messages = "Đã cập nhật môn học thành công";
+				_res.IsSuccess = false;
 				return _res;
 			}
-			_res.IsSuccess = false;
+
+			subjectInDb.Name = model.ClassName;
+			subjectInDb.Details = model.Detail;
+			subjectInDb.FacultyId = model.FacultyId;
+			subjectInDb.DepartmentId = model.DepartmentId;
+
+			_unitOfWork.Subject.Update(subjectInDb);
+			_unitOfWork.Save();
+
+			_res.Messages = "Đã cập nhật môn học thành công";
 			return _res;
 		}
 		public async Task<ApiResponse<object>> DeleteSubjectAsync(int subjectId)

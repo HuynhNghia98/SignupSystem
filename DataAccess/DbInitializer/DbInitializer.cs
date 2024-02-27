@@ -5,6 +5,7 @@ using SignupSystem.DataAccess.Data;
 using SignupSystem.DataAccess.Repository.IRepository;
 using SignupSystem.Models;
 using SignupSystem.Utilities;
+using System.Security.Claims;
 
 namespace SignupSystem.DataAccess.DbInitializer
 {
@@ -37,10 +38,11 @@ namespace SignupSystem.DataAccess.DbInitializer
 			//Tạo Role nếu không có
 			if (!_roleManager.RoleExistsAsync(SD.Role_Admin).GetAwaiter().GetResult())
 			{
-				_roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
-				_roleManager.CreateAsync(new IdentityRole(SD.Role_Accountant)).GetAwaiter().GetResult();
-				_roleManager.CreateAsync(new IdentityRole(SD.Role_RegistrationDepartment)).GetAwaiter().GetResult();
-				_roleManager.CreateAsync(new IdentityRole(SD.Role_BoardOfManager)).GetAwaiter().GetResult();
+				 CreateRoleWithClaims(SD.Role_Admin, SD.ClaimList).GetAwaiter().GetResult();
+				 CreateRoleWithClaims(SD.Role_Accountant, SD.ClaimList).GetAwaiter().GetResult();
+				 CreateRoleWithClaims(SD.Role_RegistrationDepartment, SD.ClaimList).GetAwaiter().GetResult();
+				 CreateRoleWithClaims(SD.Role_BoardOfManager, SD.ClaimList).GetAwaiter().GetResult();
+
 				_roleManager.CreateAsync(new IdentityRole(SD.Role_Lecturer)).GetAwaiter().GetResult();
 				_roleManager.CreateAsync(new IdentityRole(SD.Role_Student)).GetAwaiter().GetResult();
 
@@ -137,6 +139,40 @@ namespace SignupSystem.DataAccess.DbInitializer
 				_unitOfWork.Save();
 			}
 			return;
+		}
+
+		// Hàm để tạo vai trò với các claim
+		public async Task CreateRoleWithClaims(string roleName, List<string> claims)
+		{
+			// Tạo vai trò nếu nó chưa tồn tại
+			var roleExists = await _roleManager.RoleExistsAsync(roleName);
+			if (!roleExists)
+			{
+				_roleManager.CreateAsync(new IdentityRole(roleName)).GetAwaiter().GetResult();
+			}
+
+			// Lấy vai trò
+			var role = await _roleManager.FindByNameAsync(roleName);
+
+			// Thêm các claim cho vai trò
+			foreach (var claim in claims)
+			{
+				await AddClaimToRole(role, claim, "true");
+			}
+		}
+
+		// Hàm để thêm claim vào vai trò
+		public async Task AddClaimToRole(IdentityRole role, string claimType, string claimValue)
+		{
+			// Kiểm tra xem claim đã tồn tại trong vai trò chưa
+			var existingClaims = await _roleManager.GetClaimsAsync(role);
+			var claimExists = existingClaims.Any(c => c.Type == claimType && c.Value == claimValue);
+
+			// Thêm claim nếu chưa tồn tại
+			if (!claimExists)
+			{
+				await _roleManager.AddClaimAsync(role, new Claim(claimType, claimValue));
+			}
 		}
 	}
 }

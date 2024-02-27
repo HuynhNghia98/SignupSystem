@@ -17,7 +17,7 @@ namespace SignupSystem.Controllers.Revenue
 		[HttpPost("SearchStudentsHavePaidTuition")]
 		public async Task<IActionResult> SearchStudentsHavePaidTuition([FromForm] string? search, [FromForm] int trainingCourseId)
 		{
-			var result = await _revenue.SearchStudentsHavePaidTuitionAsync(search,trainingCourseId);
+			var result = await _revenue.SearchStudentsHavePaidTuitionAsync(search, trainingCourseId);
 
 			if (result.IsSuccess)
 			{
@@ -43,13 +43,12 @@ namespace SignupSystem.Controllers.Revenue
 			{
 				return BadRequest(result);
 			}
-
 		}
 
 		[HttpPost("AddEmployeeSalary/{id}")]
 		public async Task<IActionResult> AddEmployeeSalary(string id, [FromForm] AddCalculateEmployeeSalaryRequestDTO model)
 		{
-			var result = await _revenue.AddEmployeeSalaryAsync(id,model);
+			var result = await _revenue.AddEmployeeSalaryAsync(id, model);
 
 			if (result.IsSuccess)
 			{
