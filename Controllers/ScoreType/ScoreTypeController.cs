@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SignupSystem.Attributes;
 using SignupSystem.Models.DTO.ScoreType;
 using SignupSystem.Services.ScoreType.Interface;
+using SignupSystem.Utilities;
 
 namespace SignupSystem.Controllers.ScoreType
 {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class ScoreTypeController : ControllerBase
@@ -14,6 +18,7 @@ namespace SignupSystem.Controllers.ScoreType
 			_scoreType = scoreType;
 		}
 
+		[AuthorizeClaim(SD.Claim_ViewAllScoreTypes)]
 		[HttpGet("GetScoreTypes")]
 		public async Task<IActionResult> GetScoreTypes()
 		{
@@ -46,6 +51,7 @@ namespace SignupSystem.Controllers.ScoreType
 
 		}
 
+		[AuthorizeClaim(SD.Claim_AddEditDeleteScoreType)]
 		[HttpPost("AddScoreType")]
 		public IActionResult AddScoreType([FromForm] AddOrUpdateScoreTypeRequestDTO model)
 		{
@@ -62,6 +68,7 @@ namespace SignupSystem.Controllers.ScoreType
 
 		}
 
+		[AuthorizeClaim(SD.Claim_AddEditDeleteScoreType)]
 		[HttpPut("UpdateScoreType/{id}")]
 		public async Task<IActionResult> UpdateScoreType(int id, [FromForm] AddOrUpdateScoreTypeRequestDTO model)
 		{
@@ -78,6 +85,7 @@ namespace SignupSystem.Controllers.ScoreType
 
 		}
 
+		[AuthorizeClaim(SD.Claim_AddEditDeleteScoreType)]
 		[HttpDelete("DeleteScoreType/{id}")]
 		public async Task<IActionResult> DeleteScoreType(int id)
 		{

@@ -95,20 +95,45 @@ namespace SignupSystem.Services.Auth
 
 		private async Task<string> GenerateToken(ApplicationUser user)
 		{
-			//generate JWT Token
+			//lấy danh sách role của người dùng
 			var roles = await _userManager.GetRolesAsync(user);
+
+			// lấy userClaims
+			var userClaims = await _userManager.GetClaimsAsync(user);
+
+			//lấy role của user
+			var role = await _roleManager.FindByNameAsync(roles.FirstOrDefault());
+
+			//lấy roleClaims
+			var roleClaims = await _roleManager.GetClaimsAsync(role);
+
 			JwtSecurityTokenHandler tokenHandler = new();
 			byte[] key = Encoding.ASCII.GetBytes(SecretKey);
 
+			List<Claim> claims = new List<Claim>
+			{
+				new Claim("fullName",user.LastName+" "+user.FirstName),
+				new Claim("id",user.Id.ToString()),
+				new Claim(ClaimTypes.Email,user.UserName),
+				new Claim(ClaimTypes.Role,roles.FirstOrDefault())
+			};
+
+			//thêm các userClaims vào danh sách claims
+			foreach (var userClaim in userClaims)
+			{
+				claims.Add(new Claim(userClaim.Type, userClaim.Value));
+			}
+
+			//thêm các roleClaims vào danh sách claims
+			foreach (var roleClaim in roleClaims)
+			{
+				claims.Add(new Claim(roleClaim.Type, roleClaim.Value));
+			}
+
+			//generate JWT Token
 			SecurityTokenDescriptor tokenDescriptor = new()
 			{
-				Subject = new ClaimsIdentity(new Claim[]
-				{
-					new Claim("fullName",user.LastName+" "+user.FirstName),
-					new Claim("id",user.Id.ToString()),
-					new Claim(ClaimTypes.Email,user.UserName),
-					new Claim(ClaimTypes.Role,roles.FirstOrDefault()),
-				}),
+				Subject = new ClaimsIdentity(claims),
 				Expires = DateTime.UtcNow.AddDays(7),
 				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
 			};

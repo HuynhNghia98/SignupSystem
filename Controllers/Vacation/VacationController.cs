@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SignupSystem.Models.DTO.Subject;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SignupSystem.Attributes;
 using SignupSystem.Models.DTO.Vacation;
 using SignupSystem.Services.Vacation.Interface;
+using SignupSystem.Utilities;
 
 namespace SignupSystem.Controllers.Vacation
 {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class VacationController : ControllerBase
@@ -15,6 +18,7 @@ namespace SignupSystem.Controllers.Vacation
 			_vacation = vacation;
 		}
 
+		[AuthorizeClaim(SD.Claim_ViewHolidaySchedule)]
 		[HttpGet("GetVacations")]
 		public async Task<IActionResult> GetVacations()
 		{
@@ -63,6 +67,7 @@ namespace SignupSystem.Controllers.Vacation
 
 		}
 
+		[AuthorizeClaim(SD.Claim_AddEditDeleteHolidaySchedule)]
 		[HttpPost("AddVacation")]
 		public IActionResult AddVacation([FromForm] AddOrUpdateVacationRequestDTO model)
 		{
@@ -79,6 +84,7 @@ namespace SignupSystem.Controllers.Vacation
 
 		}
 
+		[AuthorizeClaim(SD.Claim_AddEditDeleteHolidaySchedule)]
 		[HttpPut("UpdateVacation/{id}")]
 		public async Task<IActionResult> UpdateVacation(int id, [FromForm] AddOrUpdateVacationRequestDTO model)
 		{
@@ -95,6 +101,7 @@ namespace SignupSystem.Controllers.Vacation
 
 		}
 
+		[AuthorizeClaim(SD.Claim_AddEditDeleteHolidaySchedule)]
 		[HttpDelete("DeleteVacation/{id}")]
 		public async Task<IActionResult> DeleteVacation(int id)
 		{

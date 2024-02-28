@@ -38,10 +38,10 @@ namespace SignupSystem.DataAccess.DbInitializer
 			//Tạo Role nếu không có
 			if (!_roleManager.RoleExistsAsync(SD.Role_Admin).GetAwaiter().GetResult())
 			{
-				 CreateRoleWithClaims(SD.Role_Admin, SD.ClaimList).GetAwaiter().GetResult();
-				 CreateRoleWithClaims(SD.Role_Accountant, SD.ClaimList).GetAwaiter().GetResult();
-				 CreateRoleWithClaims(SD.Role_RegistrationDepartment, SD.ClaimList).GetAwaiter().GetResult();
-				 CreateRoleWithClaims(SD.Role_BoardOfManager, SD.ClaimList).GetAwaiter().GetResult();
+				CreateRoleWithClaims(SD.Role_Admin, SD.ClaimList).GetAwaiter().GetResult();
+				CreateRoleWithClaims(SD.Role_Accountant, SD.ClaimList).GetAwaiter().GetResult();
+				CreateRoleWithClaims(SD.Role_RegistrationDepartment, SD.ClaimList).GetAwaiter().GetResult();
+				CreateRoleWithClaims(SD.Role_BoardOfManager, SD.ClaimList).GetAwaiter().GetResult();
 
 				_roleManager.CreateAsync(new IdentityRole(SD.Role_Lecturer)).GetAwaiter().GetResult();
 				_roleManager.CreateAsync(new IdentityRole(SD.Role_Student)).GetAwaiter().GetResult();
@@ -63,7 +63,8 @@ namespace SignupSystem.DataAccess.DbInitializer
 
 				_userManager.CreateAsync(newUser, "123").GetAwaiter().GetResult();
 
-				ApplicationUser user = _db.ApplicationUsers.FirstOrDefault(x => x.Email == newUser.Email);
+				var user = _db.ApplicationUsers.FirstOrDefault(x => x.Id == newUser.Id);
+				UserClaim.AddClaimsToUser(user,_userManager, SD.ClaimList);
 				_userManager.AddToRoleAsync(user, SD.Role_Admin).GetAwaiter().GetResult();
 
 				//Tạo Khóa đào tạo
@@ -148,7 +149,7 @@ namespace SignupSystem.DataAccess.DbInitializer
 			var roleExists = await _roleManager.RoleExistsAsync(roleName);
 			if (!roleExists)
 			{
-				_roleManager.CreateAsync(new IdentityRole(roleName)).GetAwaiter().GetResult();
+				await _roleManager.CreateAsync(new IdentityRole(roleName));
 			}
 
 			// Lấy vai trò

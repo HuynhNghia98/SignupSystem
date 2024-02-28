@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SignupSystem.Models.DTO.Subject;
 using SignupSystem.Services.Subject.Interfaces;
 
 namespace SignupSystem.Controllers.Subject
 {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class SubjectController : ControllerBase

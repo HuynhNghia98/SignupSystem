@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SignupSystem.Attributes;
 using SignupSystem.Models.DTO.Class;
 using SignupSystem.Services.Class.Interfaces;
+using SignupSystem.Utilities;
 
 namespace SignupSystem.Controllers.Class
 {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class ClassController : ControllerBase
@@ -14,6 +18,7 @@ namespace SignupSystem.Controllers.Class
 			_classService = classService;
 		}
 
+		[AuthorizeClaim(SD.Claim_ViewClassList)]
 		[HttpGet("GetClasses")]
 		public async Task<IActionResult> GetClasses()
 		{
@@ -71,6 +76,7 @@ namespace SignupSystem.Controllers.Class
 
 		}
 
+		[AuthorizeClaim(SD.Claim_AddEditDeleteClass)]
 		[HttpPost("AddClass")]
 		public IActionResult AddClass([FromForm] AddOrUpdateClassRequestDTO model)
 		{
@@ -86,6 +92,7 @@ namespace SignupSystem.Controllers.Class
 			}
 		}
 
+		[AuthorizeClaim(SD.Claim_AddEditDeleteClass)]
 		[HttpPut("UpdateClass/{id}")]
 		public async Task<IActionResult> UpdateClass(int id, [FromForm] AddOrUpdateClassRequestDTO model)
 		{
@@ -101,6 +108,7 @@ namespace SignupSystem.Controllers.Class
 			}
 		}
 
+		[AuthorizeClaim(SD.Claim_AddEditDeleteClass)]
 		[HttpDelete("DeleteClass/{id}")]
 		public async Task<IActionResult> DeleteClass(int id)
 		{
@@ -117,6 +125,7 @@ namespace SignupSystem.Controllers.Class
 
 		}
 
+		[AuthorizeClaim(SD.Claim_ViewSubjectListInClass)]
 		[HttpGet("GetSubjectListOfClass/{id}")]
 		public async Task<IActionResult> GetSubjectListOfClass(int id)
 		{
@@ -133,6 +142,7 @@ namespace SignupSystem.Controllers.Class
 
 		}
 
+		[AuthorizeClaim(SD.Claim_ViewStudentListInClass)]
 		[HttpGet("GetStudentListOfClass/{id}")]
 		public async Task<IActionResult> GetStudentListOfClass(int id)
 		{
@@ -179,6 +189,7 @@ namespace SignupSystem.Controllers.Class
 			}
 		}
 
+		[AuthorizeClaim(SD.Claim_UpdateScores)]
 		[HttpPut("UpdateScoreForStudent")]
 		public async Task<IActionResult> UpdateScoreForStudent([FromBody] UpdateScoresForStudentRequestDTO model)
 		{
@@ -194,6 +205,7 @@ namespace SignupSystem.Controllers.Class
 			}
 		}
 
+		[AuthorizeClaim(SD.Claim_ViewScores)]
 		[HttpPost("GetScoreOfClass")]
 		public async Task<IActionResult> GetScoreOfClass([FromForm] int classId, [FromForm] int subjectId)
 		{

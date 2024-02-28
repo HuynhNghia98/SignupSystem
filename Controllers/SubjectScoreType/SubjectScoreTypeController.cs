@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SignupSystem.Models.DTO.SubjectScoreType;
 using SignupSystem.Services.SubjectScoreType.Interface;
 
 namespace SignupSystem.Controllers.SubjectScoreType
 {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class SubjectScoreTypeController : ControllerBase

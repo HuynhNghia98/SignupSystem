@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SignupSystem.Attributes;
 using SignupSystem.Models.DTO.Lecturer;
 using SignupSystem.Services.Lecturer.Interfaces;
+using SignupSystem.Utilities;
 
 namespace SignupSystem.Controllers.Lecturer
 {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class LecturerController : ControllerBase
@@ -16,6 +20,7 @@ namespace SignupSystem.Controllers.Lecturer
 			_lecturerService = lecturerService;
 		}
 
+		[AuthorizeClaim(SD.Claim_ViewAllLecturers)]
 		[HttpGet("GetLecturers")]
 		public async Task<IActionResult> GetLecturers()
 		{
@@ -61,6 +66,7 @@ namespace SignupSystem.Controllers.Lecturer
 			}
 		}
 
+		[AuthorizeClaim(SD.Claim_AddEditDeleteLecturer)]
 		[HttpPost("AddLecturer")]
 		public async Task<IActionResult> AddLecturer([FromForm] AddLecturerRequestDTO model)
 		{
@@ -76,6 +82,7 @@ namespace SignupSystem.Controllers.Lecturer
 			}
 		}
 
+		[AuthorizeClaim(SD.Claim_AddEditDeleteLecturer)]
 		[HttpPut("UpdateLecturer/{id}")]
 		public async Task<IActionResult> UpdateLecturer(string id, [FromForm] UpdateLecturerRequestDTO model)
 		{
@@ -91,6 +98,7 @@ namespace SignupSystem.Controllers.Lecturer
 			}
 		}
 
+		[AuthorizeClaim(SD.Claim_AddEditDeleteLecturer)]
 		[HttpDelete("DeleteLecturer/{id}")]
 		public async Task<IActionResult> DeleteLecturer(string id)
 		{
@@ -106,6 +114,7 @@ namespace SignupSystem.Controllers.Lecturer
 			}
 		}
 
+		[AuthorizeClaim(SD.Claim_ViewTeachingSchedule)]
 		[HttpPost("GetAndSearchTeachingAssignmen")]
 		public async Task<IActionResult> GetAndSearchTeachingAssignmen([FromForm] string? search, [FromForm] int classId)
 		{
@@ -121,6 +130,7 @@ namespace SignupSystem.Controllers.Lecturer
 			}
 		}
 
+		[AuthorizeClaim(SD.Claim_AddEditDeleteTeachingSchedule)]
 		[HttpPost("AddTeachingAssignment")]
 		public async Task<IActionResult> AddTeachingAssignment([FromForm] AddTeachingAssignmentRequestDTO model)
 		{

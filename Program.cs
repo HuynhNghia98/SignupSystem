@@ -41,7 +41,7 @@ using SignupSystem.Services.AuthorizationManagement;
 
 namespace SignupSystem
 {
-    public class Program
+	public class Program
 	{
 		public static void Main(string[] args)
 		{
@@ -131,6 +131,16 @@ namespace SignupSystem
 				};
 			});
 
+			//
+			builder.Services.AddAuthorization(options =>
+			{
+				options.AddPolicy("IsAdminClaimAccess", policy =>
+				{
+					policy.RequireRole(SD.Role_Admin);
+					policy.RequireClaim(SD.Claim_ViewClassList,"True");
+				});
+			});
+
 			//builder.Services.AddCors();
 			builder.Services.AddCors();
 
@@ -170,7 +180,6 @@ namespace SignupSystem
 			app.UseCors(o => o.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 			app.UseAuthentication();
 			app.UseAuthorization();
-
 			app.MapControllers();
 
 			SeedData();

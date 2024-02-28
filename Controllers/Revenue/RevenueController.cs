@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SignupSystem.Models.DTO.Revenue;
 using SignupSystem.Services.Revenue.Interface;
 
 namespace SignupSystem.Controllers.Revenue
 {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class RevenueController : ControllerBase

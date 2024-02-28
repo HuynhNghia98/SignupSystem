@@ -16,17 +16,6 @@ namespace SignupSystem.Utilities
 		public const string Payment_UnPaid = "Chưa thanh toán";
 		public const string Payment_Paid = "Đã thanh toán";
 
-		//rolesDictionary
-		public readonly Dictionary<string, string> RolesDictionary = new Dictionary<string, string>
-		{
-			{ "Admin", "Quản trị" },
-			{ "RegistrationDepartment", "Bộ phận ghi danh" },
-			{ "Accountant", "Bộ phận kế toán" },
-			{ "BoardOfManager", "Ban giám đốc" },
-			{ "Lecturer", "Giảng viên" },
-			{ "Student", "Học viên" }
-		};
-
 		//claim
 		public const string Claim_ViewClassList = "Xem danh sách lớp";
 		public const string Claim_ViewStudentListInClass = "Danh sách học sinh trong lớp";

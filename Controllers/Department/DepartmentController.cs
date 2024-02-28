@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SignupSystem.Models.DTO.Department;
 using SignupSystem.Services.Department.Interfaces;
 
 namespace SignupSystem.Controllers.Department
 {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class DepartmentController : ControllerBase

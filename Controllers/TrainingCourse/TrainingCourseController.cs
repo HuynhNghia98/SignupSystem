@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SignupSystem.Models.DTO.Subject;
+using SignupSystem.Attributes;
 using SignupSystem.Models.DTO.TrainingCourse;
-using SignupSystem.Services.Subject.Interfaces;
 using SignupSystem.Services.TrainningCourse.Interfaces;
+using SignupSystem.Utilities;
 
 namespace SignupSystem.Controllers.TrainingCourse
 {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class TrainingCourseController : ControllerBase
@@ -17,6 +18,7 @@ namespace SignupSystem.Controllers.TrainingCourse
 			_trainingCourse = trainingCourse;
 		}
 
+		[AuthorizeClaim(SD.Claim_ViewAllTrainingManagers)]
 		[HttpGet("GetTrainingCourses")]
 		public async Task<IActionResult> GetTrainingCourses()
 		{
@@ -65,6 +67,7 @@ namespace SignupSystem.Controllers.TrainingCourse
 
 		}
 
+		[AuthorizeClaim(SD.Claim_AddEditDeleteTrainingManager)]
 		[HttpPost("AddTrainingCourse")]
 		public IActionResult AddTrainingCourse([FromForm] AddOrUpdateTrainingCourseRequestDTO model)
 		{
@@ -81,6 +84,7 @@ namespace SignupSystem.Controllers.TrainingCourse
 
 		}
 
+		[AuthorizeClaim(SD.Claim_AddEditDeleteTrainingManager)]
 		[HttpPut("UpdateTrainingCourse/{id}")]
 		public async Task<IActionResult> UpdateTrainingCourse(int id, [FromForm] AddOrUpdateTrainingCourseRequestDTO model)
 		{
@@ -97,6 +101,7 @@ namespace SignupSystem.Controllers.TrainingCourse
 
 		}
 
+		[AuthorizeClaim(SD.Claim_AddEditDeleteTrainingManager)]
 		[HttpDelete("DeleteTrainingCourse/{id}")]
 		public async Task<IActionResult> DeleteTrainingCourse(int id)
 		{

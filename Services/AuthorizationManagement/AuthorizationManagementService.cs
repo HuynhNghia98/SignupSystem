@@ -11,12 +11,13 @@ using SignupSystem.Models.DTO.User;
 using SignupSystem.Models.Response;
 using SignupSystem.Services.AuthorizationManagement.Interface;
 using SignupSystem.Utilities;
+using System.Data;
 using System.Linq;
 using System.Security.Claims;
 
 namespace SignupSystem.Services.AuthorizationManagement
 {
-	public class AuthorizationManagementService : ControllerBase, IAuthorizationManagementService
+	public class AuthorizationManagementService : IAuthorizationManagementService
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly ApplicationDbContext _db;
@@ -39,12 +40,12 @@ namespace SignupSystem.Services.AuthorizationManagement
 			var usersInDb = new List<ApplicationUser>();
 			if (string.IsNullOrEmpty(search))
 			{
-				usersInDb = await _unitOfWork.ApplicationUser.GetAll().ToListAsync();
+				usersInDb = await _unitOfWork.ApplicationUser.Get(x => x.IsEmployee == true, true).ToListAsync();
 			}
 			else
 			{
 				usersInDb = await _unitOfWork.ApplicationUser
-					.Get(x => x.FirstName.Contains(search), true)
+					.Get(x => x.FirstName.Contains(search) && x.IsEmployee == true, true)
 					.ToListAsync();
 			}
 
@@ -61,65 +62,92 @@ namespace SignupSystem.Services.AuthorizationManagement
 			return res;
 		}
 
+		public async Task<ApiResponse<ApplicationUser>> GetUserAsync(string userId)
+		{
+			ApiResponse<ApplicationUser> res = new();
+			if (string.IsNullOrEmpty(userId))
+			{
+				res.IsSuccess = false;
+				return res;
+			}
+
+			var userInDb = await _db.ApplicationUsers.FirstOrDefaultAsync(x => x.Id == userId);
+
+			var roleOfUser = _userManager.GetRolesAsync(userInDb).GetAwaiter().GetResult().FirstOrDefault();
+
+			if (roleOfUser != null)
+			{
+				userInDb.Role = roleOfUser;
+			}
+
+			res.Result = userInDb;
+			return res;
+		}
+
 		public async Task<ApiResponse<object>> AddUserAsync(AddOrUpdateUserRequestDTO model)
 		{
 			var role = await _roleManager.FindByNameAsync(model.RoleName);
 			if (role != null && model.Password != null)
 			{
-				ApplicationUser newUser = new()
+				var newUser = new ApplicationUser()
 				{
 					FirstName = model.UserName,
+					LastName = model.UserName,
 					Email = model.UserEmail,
-					UserCode = string.Empty,
-					LastName = string.Empty,
+					UserCode = model.UserName,
+					UserName = model.UserName,
 					Gender = 0,
-					PhoneNumber = string.Empty,
+					PhoneNumber = "0",
 					DOB = DateTime.Now,
+					IsEmployee = true,
 				};
-				var result = _userManager.CreateAsync(newUser, model.Password).GetAwaiter().GetResult();
-				if (result.Succeeded)
+				var result = await _userManager.CreateAsync(newUser, model.Password);
+
+				if (!result.Succeeded)
 				{
-					ApplicationUser user = await _unitOfWork.ApplicationUser.Get(x => x.Id == newUser.Id, true).FirstOrDefaultAsync();
-					if (user != null)
-					{
-						await _userManager.AddToRoleAsync(user, role.Name);
-
-						//add image
-						if (model.Image != null && model.Image.Length > 0)
-						{
-							//root path
-							string wwwRootPath = _webHost.WebRootPath;
-							string userImagePath = Path.Combine(wwwRootPath, @"images/user");
-							string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.Image.FileName);
-							using (var fileStream = new FileStream(Path.Combine(userImagePath, fileName), FileMode.Create))
+					_res.Errors = new Dictionary<string, List<string>>
 							{
-								model.Image.CopyTo(fileStream);
-							}
+								{ "error", new List<string> { $"Không thể tạo mới" }}
+							};
+					_res.IsSuccess = false;
+					return _res;
+				}
 
-							user.ImageUrl = @"\images\user" + fileName;
-							_unitOfWork.ApplicationUser.Update(user);
-							_unitOfWork.Save();
-						}
-
-						_res.Messages = "Tạo mới người dùng thành công";
-					}
-					else
-					{
-						_res.Errors = new Dictionary<string, List<string>>
+				var user = await _db.ApplicationUsers.FirstOrDefaultAsync(x => x.FirstName == newUser.FirstName);
+				if (user == null)
+				{
+					_res.Errors = new Dictionary<string, List<string>>
 							{
 								{ "error", new List<string> { $"Không tìm thấy người dùng đã tạo" }}
 							};
-						_res.IsSuccess = false;
-					}
-				}
-				else
-				{
-					_res.Errors = new Dictionary<string, List<string>>
-						{
-							{ "error", new List<string> { $"Tạo mới người dùng không thành công" }}
-						};
 					_res.IsSuccess = false;
+					return _res;
 				}
+
+				//thêm claim cho người dùng
+				UserClaim.AddClaimsToUser(user,_userManager,SD.ClaimList);
+
+				//thêm role cho người dùng
+				await _userManager.AddToRoleAsync(user, role.Name);
+
+				//add image
+				if (model.Image != null && model.Image.Length > 0)
+				{
+					//root path
+					string wwwRootPath = _webHost.WebRootPath;
+					string userImagePath = Path.Combine(wwwRootPath, @"images/user");
+					string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.Image.FileName);
+					using (var fileStream = new FileStream(Path.Combine(userImagePath, fileName), FileMode.Create))
+					{
+						model.Image.CopyTo(fileStream);
+					}
+
+					user.ImageUrl = @"\images\user" + fileName;
+					_unitOfWork.ApplicationUser.Update(user);
+					_unitOfWork.Save();
+				}
+				_res.Messages = "Tạo mới người dùng thành công";
+				return _res;
 			}
 			else
 			{
@@ -246,7 +274,7 @@ namespace SignupSystem.Services.AuthorizationManagement
 			return _res;
 		}
 
-		//
+		//role claims
 
 		public ApiResponse<GetRolesResponseDTO> GetRoles()
 		{
@@ -261,9 +289,9 @@ namespace SignupSystem.Services.AuthorizationManagement
 			return res;
 		}
 
-		public async Task<ApiResponse<GetRoleClaimsResponseDTO>> GetRoleClaimsAsync(string roleName)
+		public async Task<ApiResponse<GetClaimsResponseDTO>> GetRoleClaimsAsync(string roleName)
 		{
-			ApiResponse<GetRoleClaimsResponseDTO> res = new();
+			ApiResponse<GetClaimsResponseDTO> res = new();
 			// Tìm kiếm role theo tên
 			var role = await _roleManager.FindByNameAsync(roleName);
 
@@ -286,7 +314,7 @@ namespace SignupSystem.Services.AuthorizationManagement
 				c => bool.Parse(c.Value)
 			);
 
-			res.Result.RoleClaims = formattedClaims;
+			res.Result.Claims = formattedClaims;
 			return res;
 		}
 
@@ -321,6 +349,70 @@ namespace SignupSystem.Services.AuthorizationManagement
 				}
 			}
 			_res.Messages = "Cập nhật phân quyền thành công";
+			return _res;
+		}
+
+		//user claims
+
+		public async Task<ApiResponse<GetClaimsResponseDTO>> GetUserClaimsAsync(string userId)
+		{
+			ApiResponse<GetClaimsResponseDTO> res = new();
+
+			if (string.IsNullOrEmpty(userId))
+			{
+				res.IsSuccess = false;
+				return res;
+			}
+
+			//tìm kiếm user theo id
+			var userInDb = await _userManager.FindByIdAsync(userId);
+
+			if (userInDb == null)
+			{
+				res.Errors = new Dictionary<string, List<string>>
+				{
+					{ "error", new List<string> { $"Không tìm thấy người dùng" }}
+				};
+				res.IsSuccess = false;
+				return res;
+			}
+			// Tìm kiếm claim theo user
+			var userClaims = await _userManager.GetClaimsAsync(userInDb);
+
+			// Chuyển đổi danh sách claims thành định dạng phù hợp để trả về
+			var formattedClaims = userClaims.ToDictionary(
+				c => c.Type,
+				c => bool.Parse(c.Value)
+			);
+
+			res.Result.Claims = formattedClaims;
+			return res;
+		}
+
+		public async Task<ApiResponse<object>> UpdateUserClaimsAsync(string userId, UpdateUserClaimsRequestDTO model)
+		{
+			if (string.IsNullOrEmpty(userId))
+			{
+				_res.IsSuccess = false;
+				return _res;
+			}
+
+			//tìm kiếm user theo id
+			var userInDb = await _userManager.FindByIdAsync(userId);
+
+			if (userInDb == null)
+			{
+				_res.Errors = new Dictionary<string, List<string>>
+				{
+					{ "error", new List<string> { $"Không tìm thấy người dùng" }}
+				};
+				_res.IsSuccess = false;
+				return _res;
+			}
+
+			UserClaim.UpdateClaimsToUser(userInDb, _userManager, model.newUserClaims);
+
+			_res.Messages = "Cập nhật phân quyền người dùng thành công";
 			return _res;
 		}
 	}

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SignupSystem.Models.DTO.Department;
 using SignupSystem.Models.DTO.Faculty;
@@ -7,6 +8,7 @@ using SignupSystem.Services.Faculty.Interfaces;
 
 namespace SignupSystem.Controllers.Faculty
 {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class FacultyController : ControllerBase

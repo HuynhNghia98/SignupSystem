@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SignupSystem.Attributes;
 using SignupSystem.Models.DTO.Student;
-using SignupSystem.Models.Response;
 using SignupSystem.Services.Student.Interfaces;
+using SignupSystem.Utilities;
 
 namespace SignupSystem.Controllers.Student
 {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class StudentController : ControllerBase
@@ -16,6 +18,7 @@ namespace SignupSystem.Controllers.Student
 			_studentService = studentService;
 		}
 
+		[AuthorizeClaim(SD.Claim_ViewAllStudents)]
 		[HttpGet("GetStudents")]
 		public async Task<IActionResult> GetStudents()
 		{
@@ -61,6 +64,7 @@ namespace SignupSystem.Controllers.Student
 			}
 		}
 
+		[AuthorizeClaim(SD.Claim_AddEditDeleteStudent)]
 		[HttpPost("AddStudent")]
 		public async Task<IActionResult> AddStudent([FromForm] AddStudentRequestDTO model)
 		{
@@ -75,6 +79,7 @@ namespace SignupSystem.Controllers.Student
 			}
 		}
 
+		[AuthorizeClaim(SD.Claim_AddEditDeleteStudent)]
 		[HttpPut("UpdateStudent/{id}")]
 		public async Task<IActionResult> UpdateStudent(string id, [FromForm] UpdateStudentRequestDTO model)
 		{
@@ -89,6 +94,7 @@ namespace SignupSystem.Controllers.Student
 			}
 		}
 
+		[AuthorizeClaim(SD.Claim_AddEditDeleteStudent)]
 		[HttpDelete("DeleteStudent/{id}")]
 		public async Task<IActionResult> DeleteStudent(string id)
 		{
@@ -117,6 +123,7 @@ namespace SignupSystem.Controllers.Student
 			}
 		}
 
+		[AuthorizeClaim(SD.Claim_CancelCourseRegistration)]
 		[HttpDelete("DeleteRegisterdClasses/{id}")]
 		public async Task<IActionResult> DeleteRegisterdClasses(int id)
 		{
