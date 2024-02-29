@@ -53,7 +53,7 @@ namespace SignupSystem.Controllers.AuthorizationManagement
 		}
 
 		[HttpPost("AddUser")]
-		public async Task<IActionResult> AddUser([FromForm] AddOrUpdateUserRequestDTO model)
+		public async Task<IActionResult> AddUser([FromForm] AddUserRequestDTO model)
 		{
 			var result = await _authorizationManagement.AddUserAsync(model);
 
@@ -68,7 +68,7 @@ namespace SignupSystem.Controllers.AuthorizationManagement
 		}
 
 		[HttpPut("UpdateUser/{userId}")]
-		public async Task<IActionResult> UpdateUser(string userId, [FromForm] AddOrUpdateUserRequestDTO model)
+		public async Task<IActionResult> UpdateUser(string userId, [FromForm] UpdateUserRequestDTO model)
 		{
 			var result = await _authorizationManagement.UpdateUserAsync(userId, model);
 

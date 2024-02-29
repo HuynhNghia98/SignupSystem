@@ -7,8 +7,8 @@ namespace SignupSystem.Services.AuthorizationManagement.Interface
 	{
 		Task<ApiResponse<GetUsersResponseDTO>> GetAndSearchUsersAsync(string? search);
 		Task<ApiResponse<Models.ApplicationUser>> GetUserAsync(string userId);
-		Task<ApiResponse<object>> AddUserAsync(AddOrUpdateUserRequestDTO model);
-		Task<ApiResponse<object>> UpdateUserAsync(string userId, AddOrUpdateUserRequestDTO model);
+		Task<ApiResponse<object>> AddUserAsync(AddUserRequestDTO model);
+		Task<ApiResponse<object>> UpdateUserAsync(string userId, UpdateUserRequestDTO model);
 		Task<ApiResponse<object>> DeleteUserAsync(string userId);
 		//
 		ApiResponse<GetRolesResponseDTO> GetRoles();

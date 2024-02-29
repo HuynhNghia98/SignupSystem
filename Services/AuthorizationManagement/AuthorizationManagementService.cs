@@ -84,11 +84,26 @@ namespace SignupSystem.Services.AuthorizationManagement
 			return res;
 		}
 
-		public async Task<ApiResponse<object>> AddUserAsync(AddOrUpdateUserRequestDTO model)
+		public async Task<ApiResponse<object>> AddUserAsync(AddUserRequestDTO model)
 		{
 			var role = await _roleManager.FindByNameAsync(model.RoleName);
 			if (role != null && model.Password != null)
 			{
+				var userInDb = await _unitOfWork.ApplicationUser
+					.Get(x => x.FirstName.Equals(model.UserName) || x.UserName.Equals(model.UserName), true)
+					.FirstOrDefaultAsync();
+
+				//kiểm tra trùng username
+				if (userInDb != null)
+				{
+					_res.Errors = new Dictionary<string, List<string>>
+							{
+								{ "error", new List<string> { $"Tên đã tồn tại" }}
+							};
+					_res.IsSuccess = false;
+					return _res;
+				}
+
 				var newUser = new ApplicationUser()
 				{
 					FirstName = model.UserName,
@@ -125,7 +140,7 @@ namespace SignupSystem.Services.AuthorizationManagement
 				}
 
 				//thêm claim cho người dùng
-				UserClaim.AddClaimsToUser(user,_userManager,SD.ClaimList);
+				UserClaim.AddClaimsToUser(user, _userManager, SD.ClaimList);
 
 				//thêm role cho người dùng
 				await _userManager.AddToRoleAsync(user, role.Name);
@@ -160,7 +175,7 @@ namespace SignupSystem.Services.AuthorizationManagement
 			return _res;
 		}
 
-		public async Task<ApiResponse<object>> UpdateUserAsync(string userId, AddOrUpdateUserRequestDTO model)
+		public async Task<ApiResponse<object>> UpdateUserAsync(string userId, UpdateUserRequestDTO model)
 		{
 			if (string.IsNullOrEmpty(userId))
 			{
@@ -178,11 +193,13 @@ namespace SignupSystem.Services.AuthorizationManagement
 			{
 				_res.Errors = new Dictionary<string, List<string>>
 							{
-								{ nameof(AddOrUpdateUserRequestDTO.RoleName), new List<string> { $"Vai trò không tồn tại." }}
+								{ nameof(AddUserRequestDTO.RoleName), new List<string> { $"Vai trò không tồn tại." }}
 							};
 				_res.IsSuccess = false;
 				return _res;
 			}
+
+
 
 			var userInDb = await _unitOfWork.ApplicationUser.Get(x => x.Id == userId, true).FirstOrDefaultAsync();
 			if (userInDb == null)
@@ -191,6 +208,21 @@ namespace SignupSystem.Services.AuthorizationManagement
 					{
 						{ "userId", new List<string> { $"Không tìm thấy người dùng" }}
 					};
+				_res.IsSuccess = false;
+				return _res;
+			}
+
+			var userInDbToCheckUserName = await _unitOfWork.ApplicationUser
+				.Get(x => (x.FirstName.Equals(model.UserName) || x.UserName.Equals(model.UserName)) && x.Id != userInDb.Id, true)
+				.FirstOrDefaultAsync();
+
+			//kiểm tra trùng tên
+			if (userInDbToCheckUserName != null)
+			{
+				_res.Errors = new Dictionary<string, List<string>>
+							{
+								{ "error", new List<string> { $"Tên đã tồn tại" }}
+							};
 				_res.IsSuccess = false;
 				return _res;
 			}
